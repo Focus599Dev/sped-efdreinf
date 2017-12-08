@@ -134,6 +134,8 @@ class Tools extends ToolsBase
             "Content-length: $msgSize"
         ];
 
+        print_r($envelope);
+
         //return $envelope;
         return (string) $this->soap->send(
             $this->method,

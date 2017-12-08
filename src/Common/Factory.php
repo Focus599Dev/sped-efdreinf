@@ -127,18 +127,22 @@ abstract class Factory
         Certificate $certificate = null,
         $date = ''
     ) {
-        //set properties from config
-        $stdConf = json_decode($config);
+        $stdConf = $config;
+
         $this->date = new DateTime();
+
         if (!empty($date)) {
             $this->date = new DateTime($date);
         }
+
         $this->tpAmb = $stdConf->tpAmb;
         $this->verProc = $stdConf->verProc;
         $this->layout = $stdConf->eventoVersion;
         $this->tpInsc = $stdConf->empregador->tpInsc;
         $this->nrInsc = $stdConf->empregador->nrInsc;
         $this->nmRazao = $stdConf->empregador->nmRazao;
+        $this->evtid = $std->idEvento;
+
         $this->layoutStr = $this->strLayoutVer($this->layout);
         $this->certificate = $certificate;
         if (empty($std) || !is_object($std)) {
@@ -240,23 +244,25 @@ abstract class Factory
             $this->dom = new Dom('1.0', 'UTF-8');
             $this->dom->preserveWhiteSpace = false;
             $this->dom->formatOutput = false;
-            
+
             $this->evtid = FactoryId::build(
                 $this->tpInsc,
                 $this->nrInsc,
                 $this->date,
-                $this->std->sequencial
+                1
             );
 
+
             $this->main = '<ReceberLoteEventos xmlns="http://sped.fazenda.gov.br/">'
-                . '<Reinf xmlns="' . $this->xmlns . $this->layoutStr . '/">' 
                 . '<loteEventos>'
+                . '<Reinf xmlns="' . $this->xmlns . $this->layoutStr . '/">' 
                 . '<evento id="' . $this->evtid . '">'
                 . '%s'
                 . '</evento>'
-                . '</loteEventos>'
                 . '</Reinf>'
+                . '</loteEventos>'
                 . '</ReceberLoteEventos>';
+
 
             $xml = '<Reinf xmlns="' . $this->xmlns . $this->layoutStr . '/">'
                 . "</Reinf>";

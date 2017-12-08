@@ -81,74 +81,92 @@ class EvtInfoContri extends Factory implements FactoryInterface
             $this->verProc,
             true
         );
+
         $this->node->insertBefore($ideEvento, $ideContri);
+        
         //tag deste evento em particular
         $infoContri = $this->dom->createElement("infoContri");
+        
         //se aplica a todos os modos
         $idePeriodo = $this->dom->createElement("idePeriodo");
+        
         $this->dom->addChild(
             $idePeriodo,
             "iniValid",
             $this->std->inivalid,
             true
         );
+        
         $this->dom->addChild(
             $idePeriodo,
             "fimValid",
             !empty($this->std->fimvalid) ? $this->std->fimvalid : null,
             false
         );
+
         if (!empty($this->std->infocadastro)) {
             
             $cad = $this->std->infocadastro;
+            
             $infocadastro = $this->dom->createElement("infoCadastro");
+            
             $this->dom->addChild(
                 $infocadastro,
                 "classTrib",
                 $cad->classtrib,
                 true
             );
+            
             $this->dom->addChild(
                 $infocadastro,
                 "indEscrituracao",
                 $cad->indescrituracao,
                 true
             );
+            
             $this->dom->addChild(
                 $infocadastro,
                 "indDesoneracao",
                 $cad->inddesoneracao,
                 true
             );
+            
             $this->dom->addChild(
                 $infocadastro,
                 "indAcordoIsenMulta",
                 $cad->indacordoisenmulta,
                 true
             );
+            
             $indsitpj = null;
+            
             if (isset($cad->indsitpj)) {
                 $indsitpj = $cad->indsitpj;
             }
+            
             $this->dom->addChild(
                 $infocadastro,
                 "indSitPJ",
                 $indsitpj,
                 false
             );
+            
             $contato = $this->dom->createElement("contato");
+            
             $this->dom->addChild(
                 $contato,
                 "nmCtt",
                 $cad->contato->nmctt,
                 true
             );
+            
             $this->dom->addChild(
                 $contato,
                 "cpfCtt",
                 $cad->contato->cpfctt,
                 true
             );
+            
             $this->dom->addChild(
                 $contato,
                 "foneFixo",
@@ -157,6 +175,7 @@ class EvtInfoContri extends Factory implements FactoryInterface
                     : null,
                 false
             );
+            
             $this->dom->addChild(
                 $contato,
                 "foneCel",
@@ -165,6 +184,7 @@ class EvtInfoContri extends Factory implements FactoryInterface
                     : null,
                 false
             );
+            
             $this->dom->addChild(
                 $contato,
                 "email",
@@ -173,9 +193,12 @@ class EvtInfoContri extends Factory implements FactoryInterface
                     : null,
                 false
             );
+            
             $infocadastro->appendChild($contato);
+
             if (!empty($cad->softhouse)) {
                 foreach($cad->softhouse as $soft) {
+
                     $softhouse = $this->dom->createElement("softHouse");
                     $this->dom->addChild(
                         $softhouse,
@@ -227,11 +250,12 @@ class EvtInfoContri extends Factory implements FactoryInterface
                 $infocadastro->appendChild($infoEFR);
             }
         }
-        if ($this->std->modo == 'INC') {
+        
+        if ($this->std->modo == 'INCLUSAO') {
             $modo = $this->dom->createElement("inclusao");
             $modo->appendChild($idePeriodo);
             $modo->appendChild($infocadastro);
-        } elseif ($this->std->modo == 'ALT') {
+        } elseif ($this->std->modo == 'ALTERACAO') {
             $modo = $this->dom->createElement("alteracao");
             $modo->appendChild($idePeriodo);
             $modo->appendChild($infocadastro);
@@ -239,10 +263,14 @@ class EvtInfoContri extends Factory implements FactoryInterface
             $modo = $this->dom->createElement("exclusao");
             $modo->appendChild($idePeriodo);
         }
+
         //finalização do xml
         $infoContri->appendChild($modo);
+
         $this->node->appendChild($infoContri);
+
         $this->reinf->appendChild($this->node);
+
         $this->sign();
         
     }
