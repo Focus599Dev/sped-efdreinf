@@ -18,7 +18,7 @@ class FactoryId
         $tpInsc,
         $nrInsc,
         DateTime $date,
-        $sequential = 1
+        $sequential = 0
     ) {
         if (empty($sequential)) {
             $sequential = 1;

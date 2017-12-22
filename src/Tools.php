@@ -32,7 +32,8 @@ class Tools extends ToolsBase
      */
     protected $soap;
     protected $soapnamespaces = [
-        'xmlns:soapenv' => "http://schemas.xmlsoap.org/soap/envelope/"
+        'xmlns:soapenv' => "http://schemas.xmlsoap.org/soap/envelope/",
+        'xmlns:sped' => "http://sped.fazenda.gov.br/",
     ];
     protected $objHeader;
     protected $xmlns;
@@ -117,13 +118,23 @@ class Tools extends ToolsBase
             $this->soap = new SoapCurl($this->certificate);
         }
         $envelope = '<?xml version="1.0" encoding="utf-8"?>' . chr(10) . '<soapenv:Envelope ';
+        
+        $attr = array();
+        
         foreach ($this->soapnamespaces as $key => $xmlns) {
-            $envelope .= "$key = \"$xmlns\"";
+            $attr[] = "$key=\"$xmlns\"";
         }
+
+        $envelope .= implode(' ', $attr);
+
         $envelope .= ">"
-            . "<soapenv:Header/>"
+            . "<soapenv:Header></soapenv:Header>"
             . "<soapenv:Body>"
+            . "<sped:ReceberLoteEventos>"
+            . "<sped:loteEventos>"
             . $request
+            . "</sped:loteEventos>"
+            . "</sped:ReceberLoteEventos>"
             . "</soapenv:Body>"
             . "</soapenv:Envelope>";
         
@@ -134,9 +145,6 @@ class Tools extends ToolsBase
             "Content-length: $msgSize"
         ];
 
-        print_r($envelope);
-
-        //return $envelope;
         return (string) $this->soap->send(
             $this->method,
             $this->uri,
@@ -169,5 +177,17 @@ class Tools extends ToolsBase
                 $evento->setCertificate($this->certificate);
             }
         }
+    }
+
+
+    public function readReturn ($xml){
+
+        $xml = substr($xml, strpos($xml, "<ReceberLoteEventosResult"));
+                                        
+        $xml = substr($xml, 0, strpos($xml, "</ReceberLoteEventosResult>") + strlen('</ReceberLoteEventosResult>'));
+            
+        $xml = simplexml_load_string($xml);
+
+        return $xml;
     }
 }

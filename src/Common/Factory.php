@@ -113,6 +113,8 @@ abstract class Factory
      */
     protected $certificate;
 
+    protected $enviaLotVersion;
+
     /**
      * Constructor
      *
@@ -134,7 +136,7 @@ abstract class Factory
         if (!empty($date)) {
             $this->date = new DateTime($date);
         }
-
+        $this->enviaLotVersion = $stdConf->serviceVersion;
         $this->tpAmb = $stdConf->tpAmb;
         $this->verProc = $stdConf->verProc;
         $this->layout = $stdConf->eventoVersion;
@@ -245,26 +247,22 @@ abstract class Factory
             $this->dom->preserveWhiteSpace = false;
             $this->dom->formatOutput = false;
 
+            // SAP esta mandando ID
             $this->evtid = FactoryId::build(
                 $this->tpInsc,
                 $this->nrInsc,
-                $this->date,
-                1
+                $this->date
             );
 
-
-            $this->main = '<ReceberLoteEventos xmlns="http://sped.fazenda.gov.br/">'
+            $this->main = '<Reinf xmlns="http://www.reinf.esocial.gov.br/schemas/envioLoteEventos/v' . $this->enviaLotVersion . '">' 
                 . '<loteEventos>'
-                . '<Reinf xmlns="' . $this->xmlns . $this->layoutStr . '/">' 
                 . '<evento id="' . $this->evtid . '">'
                 . '%s'
                 . '</evento>'
-                . '</Reinf>'
                 . '</loteEventos>'
-                . '</ReceberLoteEventos>';
+                . '</Reinf>';
 
-
-            $xml = '<Reinf xmlns="' . $this->xmlns . $this->layoutStr . '/">'
+            $xml = '<Reinf xmlns="' . $this->xmlns . $this->evtName . '/' .$this->layoutStr . '">'
                 . "</Reinf>";
             
             $this->dom->loadXML($xml);
@@ -417,8 +415,8 @@ abstract class Factory
             $xml = Signer::sign(
                 $this->certificate,
                 $xml,
-                'Reinf',
-                '',
+                $this->evtTag,
+                'id',
                 OPENSSL_ALGO_SHA256,
                 [true, false, null, null]
             );

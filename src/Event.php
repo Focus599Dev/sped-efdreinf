@@ -72,7 +72,7 @@ class Event
     {
         $name = str_replace('-', '', strtolower($name));
         $realname = $name;
-        if (substr($name, 0, 1) == 's') {
+        if (substr($name, 0, 1) == 'r') {
             if (!array_key_exists($name, self::$aliases)) {
                 //este evento não foi localizado
                 throw EventsException::wrongArgument(1000, $name);
@@ -98,6 +98,7 @@ class Event
         if (count($arguments) > 3) {
             return new $className($arguments[0], $arguments[1], $arguments[2], $arguments[3]);
         }
+
         return new $className($arguments[0], $arguments[1]);
     }
 }

@@ -26,8 +26,13 @@ class EvtInfoContri extends Factory implements FactoryInterface
 {
     /**
      * @var string
+     * NOTA: refere-se ao nome do XSD e ao namespace
      */
     protected $evtName = 'evtInfoContribuinte';
+    /**
+     *
+     * @var string
+     */
     protected $evtTag = 'evtInfoContri';
     /**
      * @var string
@@ -197,6 +202,7 @@ class EvtInfoContri extends Factory implements FactoryInterface
             $infocadastro->appendChild($contato);
 
             if (!empty($cad->softhouse)) {
+
                 foreach($cad->softhouse as $soft) {
 
                     $softhouse = $this->dom->createElement("softHouse");
@@ -234,20 +240,22 @@ class EvtInfoContri extends Factory implements FactoryInterface
                 }
             }
             if (!empty($cad->infoefr)) {
-                $infoEFR = $this->dom->createElement("infoEFR");
-                $this->dom->addChild(
-                    $infoEFR,
-                    "ideEFR",
-                    $cad->infoefr->ideefr,
-                    true
-                );
-                $this->dom->addChild(
-                    $infoEFR,
-                    "cnpjEFR",
-                    !empty($cad->infoefr->cnpjefr) ? $cad->infoefr->cnpjefr : null,
-                    false
-                );
-                $infocadastro->appendChild($infoEFR);
+                if ($cad->infoefr->ideefr != 'N'){
+                    $infoEFR = $this->dom->createElement("infoEFR");
+                    $this->dom->addChild(
+                        $infoEFR,
+                        "ideEFR",
+                        $cad->infoefr->ideefr,
+                        true
+                    );
+                    $this->dom->addChild(
+                        $infoEFR,
+                        "cnpjEFR",
+                        !empty($cad->infoefr->cnpjefr) ? $cad->infoefr->cnpjefr : null,
+                        false
+                    );
+                    $infocadastro->appendChild($infoEFR);
+                }
             }
         }
         

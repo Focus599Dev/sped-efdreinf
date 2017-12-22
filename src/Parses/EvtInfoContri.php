@@ -54,19 +54,19 @@ class EvtInfoContri{
 
     	$this->obParsed->config->tpAmb = $this->ob[1][1];
     	
-    	$this->obParsed->config->verProc = $this->ob[1][2];
+    	$this->obParsed->config->verProc = $this->ob[1][3];
 
-    	$this->obParsed->config->eventoVersion = '1_01_01';
+    	$this->obParsed->config->eventoVersion = '1_02_00';
     	
-    	$this->obParsed->config->serviceVersion = '1_01_01';
+    	$this->obParsed->config->serviceVersion = '1_02_00';
     	
     	$this->obParsed->config->empregador = new stdClass();
     	
-    	$this->obParsed->config->empregador->tpInsc = $this->ob[1][3];
+    	$this->obParsed->config->empregador->tpInsc = $this->ob[1][4];
 
     	$this->obParsed->config->empregador->nrInsc = substr(preg_replace('/\D/', '', $this->ob[0][0]), 0, 8);
     	
-    	$this->obParsed->config->empregador->nmRazao = $this->ob[1][24];
+    	$this->obParsed->config->empregador->nmRazao = $this->ob[1][19];
 
     	$this->obParsed->config->transmissor = $this->obParsed->config->empregador;
     	
@@ -89,8 +89,6 @@ class EvtInfoContri{
     	$this->obParsed->infocadastro->indacordoisenmulta = $this->ob[1][11];
 
     	$this->obParsed->infocadastro->indsitpj = $this->ob[1][12];
-
-    	// $this->obParsed->infocadastro->indsitpj = $this->ob[1][13];
 
     	$this->obParsed->infocadastro->contato = new stdClass();
 

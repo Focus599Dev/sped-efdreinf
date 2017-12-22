@@ -10,6 +10,8 @@ namespace NFePHP\EFDReinf\Exception;
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
+use NFePHP\EFDReinf\Exception\ExceptionInterface;
+
 class EventsException extends \InvalidArgumentException implements ExceptionInterface
 {
     public static $list = [
