@@ -53,7 +53,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         $response = '';
         $this->requestHead = implode("\n", $parameters);
         $this->requestBody = $envelope;
-        
+
         try {
             $this->saveTemporarilyKeyFiles();
             $oCurl = curl_init();

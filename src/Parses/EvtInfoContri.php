@@ -65,8 +65,6 @@ class EvtInfoContri{
     	$this->obParsed->config->empregador->tpInsc = $this->ob[1][4];
 
     	$this->obParsed->config->empregador->nrInsc = substr(preg_replace('/\D/', '', $this->ob[0][0]), 0, 8);
-    	
-    	$this->obParsed->config->empregador->nmRazao = $this->ob[1][19];
 
     	$this->obParsed->config->transmissor = $this->obParsed->config->empregador;
     	
@@ -78,49 +76,68 @@ class EvtInfoContri{
     	
     	$this->obParsed->idEvento = $this->ob[0][3];
 
-    	$this->obParsed->infocadastro = new stdClass();
+        if ($this->obParsed->modo == 'INCLUSAO' || $this->obParsed->modo == 'ALTERACAO'){
+        	
+            $this->obParsed->infocadastro = new stdClass();
 
-    	$this->obParsed->infocadastro->classtrib = $this->ob[1][8];
+        	$this->obParsed->infocadastro->classtrib = $this->ob[1][8];
 
-    	$this->obParsed->infocadastro->indescrituracao = $this->ob[1][9];
+        	$this->obParsed->infocadastro->indescrituracao = $this->ob[1][9];
 
-    	$this->obParsed->infocadastro->inddesoneracao = $this->ob[1][10];
-    	
-    	$this->obParsed->infocadastro->indacordoisenmulta = $this->ob[1][11];
+        	$this->obParsed->infocadastro->inddesoneracao = $this->ob[1][10];
+        	
+        	$this->obParsed->infocadastro->indacordoisenmulta = $this->ob[1][11];
 
-    	$this->obParsed->infocadastro->indsitpj = $this->ob[1][12];
+        	$this->obParsed->infocadastro->indsitpj = $this->ob[1][12];
 
-    	$this->obParsed->infocadastro->contato = new stdClass();
+        	$this->obParsed->infocadastro->contato = new stdClass();
 
-		$this->obParsed->infocadastro->contato->nmctt = $this->ob[1][13];
-		
-		$this->obParsed->infocadastro->contato->cpfctt = $this->ob[1][14];
+    		$this->obParsed->infocadastro->contato->nmctt = $this->ob[1][13];
+    		
+    		$this->obParsed->infocadastro->contato->cpfctt = $this->ob[1][14];
 
-		$this->obParsed->infocadastro->contato->fonefixo = $this->ob[1][15];
-		
-		$this->obParsed->infocadastro->contato->fonecel = $this->ob[1][16];
+    		$this->obParsed->infocadastro->contato->fonefixo = $this->ob[1][15];
+    		
+    		$this->obParsed->infocadastro->contato->fonecel = $this->ob[1][16];
 
-		$this->obParsed->infocadastro->contato->email = $this->ob[1][17];
+    		$this->obParsed->infocadastro->contato->email = $this->ob[1][17];
 
-		$this->obParsed->infocadastro->softhouse = array();
-		
-		$this->obParsed->infocadastro->softhouse[0] = new stdClass();
+    		$this->obParsed->infocadastro->softhouse = array();
+    		
+    		$this->obParsed->infocadastro->softhouse[0] = new stdClass();
 
-		$this->obParsed->infocadastro->softhouse[0]->cnpjsofthouse =  preg_replace('/\D/', '', $this->ob[1][18]);
-		
-		$this->obParsed->infocadastro->softhouse[0]->nmrazao = $this->ob[1][19];
+    		$this->obParsed->infocadastro->softhouse[0]->cnpjsofthouse =  preg_replace('/\D/', '', $this->ob[1][18]);
+    		
+    		$this->obParsed->infocadastro->softhouse[0]->nmrazao = $this->ob[1][19];
 
-		$this->obParsed->infocadastro->softhouse[0]->nmcont = $this->ob[1][20];
+            $this->obParsed->config->empregador->nmRazao = $this->ob[1][19];
 
-		$this->obParsed->infocadastro->softhouse[0]->telefone = $this->ob[1][21];
+    		$this->obParsed->infocadastro->softhouse[0]->nmcont = $this->ob[1][20];
 
-		$this->obParsed->infocadastro->softhouse[0]->email = $this->ob[1][22];
+    		$this->obParsed->infocadastro->softhouse[0]->telefone = $this->ob[1][21];
 
-		$this->obParsed->infocadastro->infoefr = new stdClass();
+    		$this->obParsed->infocadastro->softhouse[0]->email = $this->ob[1][22];
 
-		$this->obParsed->infocadastro->infoefr->ideefr = $this->ob[1][23];
+    		$this->obParsed->infocadastro->infoefr = new stdClass();
 
-		$this->obParsed->infocadastro->infoefr->cnpjEFR = $this->ob[1][24];
+    		$this->obParsed->infocadastro->infoefr->ideefr = $this->ob[1][23];
+
+    		$this->obParsed->infocadastro->infoefr->cnpjEFR = $this->ob[1][24];
+
+        }
+
+        if ($this->obParsed->modo == 'EXCLUSAO'){
+            $this->obParsed->config->empregador->nmRazao = $this->ob[1][8];
+        }
+
+        if (isset($this->ob[1][25]) && $this->ob[1][25] == 'NOVA_VALIDADE'){
+            
+            $this->obParsed->modo_aux = 'NOVA_VALIDADE';
+
+            $this->obParsed->newinivalid = $this->ob[1][26];
+        
+            $this->obParsed->newfimvalid = $this->ob[1][27];
+        }
 
 		return $this->obParsed;
     }

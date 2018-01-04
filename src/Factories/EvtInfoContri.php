@@ -263,13 +263,40 @@ class EvtInfoContri extends Factory implements FactoryInterface
             $modo = $this->dom->createElement("inclusao");
             $modo->appendChild($idePeriodo);
             $modo->appendChild($infocadastro);
-        } elseif ($this->std->modo == 'ALTERACAO') {
+        } else if ($this->std->modo == 'ALTERACAO') {
             $modo = $this->dom->createElement("alteracao");
+            
             $modo->appendChild($idePeriodo);
+            
             $modo->appendChild($infocadastro);
+
+            if ($this->std->modo_aux == 'NOVA_VALIDADE'){
+                
+                $nova_validade = $this->dom->createElement("novaValidade");
+
+                $this->dom->addChild(
+                    $nova_validade,
+                    "iniValid",
+                    $this->std->newinivalid,
+                    true
+                );
+                
+                $this->dom->addChild(
+                    $nova_validade,
+                    "fimValid",
+                    !empty($this->std->newfimvalid) ? $this->std->newfimvalid : null,
+                    false
+                );
+
+                $modo->appendChild($nova_validade);
+
+            }
+
         } else {
             $modo = $this->dom->createElement("exclusao");
+            
             $modo->appendChild($idePeriodo);
+
         }
 
         //finalização do xml
