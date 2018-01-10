@@ -24,33 +24,23 @@ use stdClass;
 class EvtAssocDespRec extends Factory implements FactoryInterface
 {
     /**
-     * @var string
-     * NOTA: indica o XSD e o namespace do XML
-     */
-    protected $evtName = 'evtRecursoRecebidoAssociacao';
-    /**
-     * @var string
-     */
-    protected $evtTag = 'evtAssocDespRec';
-    /**
-     * @var string
-     */
-    protected $evtAlias = 'R-2030';
-
-    /**
      * Constructor
      * @param string $config
      * @param stdClass $std
      * @param Certificate $certificate
-     * @param string date
+     * @param string $data
      */
     public function __construct(
         $config,
         stdClass $std,
         Certificate $certificate = null,
-        $date = ''
+        $data = ''
     ) {
-        parent::__construct($config, $std, $certificate, $date);
+        $params = new \stdClass();
+        $params->evtName = 'evtRecursoRecebidoAssociacao';
+        $params->evtTag = 'evtAssocDespRec';
+        $params->evtAlias = 'R-2030';
+        parent::__construct($config, $std, $params, $certificate, $data);
     }
     
     /**
@@ -220,6 +210,6 @@ class EvtAssocDespRec extends Factory implements FactoryInterface
         $this->node->appendChild($ideContri);
         $this->reinf->appendChild($this->node);
         //$this->xml = $this->dom->saveXML($this->reinf);
-        $this->sign();
+        $this->sign($this->evtTag);
     }
 }

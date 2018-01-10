@@ -11,8 +11,8 @@ namespace NFePHP\EFDReinf\Factories;
  * @license   http://www.gnu.org/licenses/lgpl.txt LGPLv3+
  * @license   https://opensource.org/licenses/MIT MIT
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
- * @author    Roberto L. Machado <linux.rlm at gmail dot com>
- * @link      http://github.com/nfephp-org/sped-efdreinf for the canonical source repository
+ * @author    Marlon O. Barboda <marlon.academi@gmail.com>
+ * @link      https://github.com/Focus599Dev/sped-efdreinf for the canonical source repository
  */
 
 use NFePHP\EFDReinf\Common\Factory;
@@ -24,21 +24,7 @@ use stdClass;
 
 class EvtInfoContri extends Factory implements FactoryInterface
 {
-    /**
-     * @var string
-     * NOTA: refere-se ao nome do XSD e ao namespace
-     */
-    protected $evtName = 'evtInfoContribuinte';
-    /**
-     *
-     * @var string
-     */
-    protected $evtTag = 'evtInfoContri';
-    /**
-     * @var string
-     */
-    protected $evtAlias = 'R-1000';
-
+    
     /**
      * Constructor
      * @param string $config
@@ -50,10 +36,18 @@ class EvtInfoContri extends Factory implements FactoryInterface
         $config,
         stdClass $std,
         Certificate $certificate = null,
-        $date = ''
+        $data = ''
     ) {
-        parent::__construct($config, $std, $certificate, $date);
-        self::toNode();
+        $params = new \stdClass();
+        
+        $params->evtName = 'evtInfoContribuinte';
+        
+        $params->evtTag = 'evtInfoContri';
+        
+        $params->evtAlias = 'R-1000';
+
+        parent::__construct($config, $std, $params, $certificate, $data);
+        
     }
     
     /**
@@ -212,65 +206,79 @@ class EvtInfoContri extends Factory implements FactoryInterface
                         $soft->cnpjsofthouse,
                         true
                     );
+
                     $this->dom->addChild(
                         $softhouse,
                         "nmRazao",
                         $soft->nmrazao,
                         true
                     );
+
                     $this->dom->addChild(
                         $softhouse,
                         "nmCont",
                         $soft->nmcont,
                         true
                     );
+
                     $this->dom->addChild(
                         $softhouse,
                         "telefone",
                         !empty($soft->telefone) ? $soft->telefone : null,
                         false
                     );
+
                     $this->dom->addChild(
                         $softhouse,
                         "email",
                         !empty($soft->email) ? $soft->email : null,
                         false
                     );
+
                     $infocadastro->appendChild($softhouse);
                 }
             }
+
             if (!empty($cad->infoefr)) {
                 if ($cad->infoefr->ideefr != 'N'){
                     $infoEFR = $this->dom->createElement("infoEFR");
+                    
                     $this->dom->addChild(
                         $infoEFR,
                         "ideEFR",
                         $cad->infoefr->ideefr,
                         true
                     );
+
                     $this->dom->addChild(
                         $infoEFR,
                         "cnpjEFR",
                         !empty($cad->infoefr->cnpjefr) ? $cad->infoefr->cnpjefr : null,
                         false
                     );
+
                     $infocadastro->appendChild($infoEFR);
                 }
             }
         }
         
         if ($this->std->modo == 'INCLUSAO') {
+
             $modo = $this->dom->createElement("inclusao");
+
             $modo->appendChild($idePeriodo);
+
             $modo->appendChild($infocadastro);
+
         } else if ($this->std->modo == 'ALTERACAO') {
+
             $modo = $this->dom->createElement("alteracao");
             
             $modo->appendChild($idePeriodo);
             
             $modo->appendChild($infocadastro);
 
-            if ($this->std->modo_aux == 'NOVA_VALIDADE'){
+            if (isset($this->std->modo_aux) && $this->std->modo_aux == 'NOVA_VALIDADE'){
                 
                 $nova_validade = $this->dom->createElement("novaValidade");
 
@@ -293,6 +301,7 @@ class EvtInfoContri extends Factory implements FactoryInterface
             }
 
         } else {
+            
             $modo = $this->dom->createElement("exclusao");
             
             $modo->appendChild($idePeriodo);
@@ -305,8 +314,8 @@ class EvtInfoContri extends Factory implements FactoryInterface
         $this->node->appendChild($infoContri);
 
         $this->reinf->appendChild($this->node);
-
-        $this->sign();
+        
+        $this->sign($this->evtTag);
         
     }
 }

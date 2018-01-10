@@ -15,38 +15,10 @@ namespace NFePHP\EFDReinf\Parses;
  * @link      https://github.com/Focus599Dev/sped-efdreinf for the canonical source repository
  */
 
+use NFePHP\EFDReinf\Parses\Parse;
 use stdClass;
 
-class EvtTabProcesso{
-    private $txt;
-    
-    private $ob;
-
-    private $obParsed;
-
-    public function __construct($txt){
-    	$this->txt = $txt;
-
-    	$this->obParsed = new stdClass();
-
-    	$this->ob = $this->convertTxtToArray($txt);
-    }
-
-    private function convertTxtToArray($txt){
-
-    	if (strlen($txt) > 0) {
-            //carrega a matriz com as linha do arquivo
-            $aDados = explode("\n", $txt);
-        }
-
-        $rows = array();
-
-        foreach ( $aDados as $data) {
-        	$rows[] = explode('|',$data);
-        }
-
-        return $rows;
-    }
+class EvtTabProcesso extends Parse{
 
     public function convert(){
 
@@ -56,17 +28,15 @@ class EvtTabProcesso{
     	
     	$this->obParsed->config->verProc = $this->ob[1][3];
 
-    	$this->obParsed->config->eventoVersion = '1_02_00';
-    	
-    	$this->obParsed->config->serviceVersion = '1_02_00';
+    	$this->obParsed->config->eventoVersion = $this->eventoVersion;
+        
+        $this->obParsed->config->serviceVersion = $this->serviceVersion;
     	
     	$this->obParsed->config->empregador = new stdClass();
     	
     	$this->obParsed->config->empregador->tpInsc = $this->ob[1][4];
 
     	$this->obParsed->config->empregador->nrInsc = substr(preg_replace('/\D/', '', $this->ob[0][0]), 0, 8);
-
-        $this->obParsed->config->empregador->nmRazao = $this->ob[1][19];
 
     	$this->obParsed->config->transmissor = $this->obParsed->config->empregador;
     	
@@ -77,44 +47,52 @@ class EvtTabProcesso{
     	$this->obParsed->modo = $this->ob[0][1];
 
         $this->obParsed->idEvento = $this->ob[0][3];
-    	
-        $this->obParsed->sequencial = 1;
 
         $this->obParsed->tpproc = intval($this->ob[1][8]);
     	
         $this->obParsed->nrproc = $this->ob[1][9];
 
-        $this->obParsed->indautoria = intval($this->ob[1][10]);
-
         $this->obParsed->infosusp = array();
 
-        $this->obParsed->infosusp[0] = new stdClass();
-
-        $this->obParsed->infosusp[0]->codsusp = $this->ob[1][11];
-
-        $this->obParsed->infosusp[0]->indsusp = $this->ob[1][12];
-
-        $this->obParsed->infosusp[0]->dtdecisao = $this->ob[1][13];
-
-        $this->obParsed->infosusp[0]->inddeposito = $this->ob[1][14];
-        
-        $this->obParsed->dadosprocjud  = new stdClass();
-
-        $this->obParsed->dadosprocjud->ufvara  = $this->ob[1][15];
-
-        $this->obParsed->dadosprocjud->codmunic  = $this->ob[1][16];
-
-        $this->obParsed->dadosprocjud->idvara  = $this->ob[1][17];
-
-        if (isset($this->ob[1][19]) && $this->ob[1][19] == 'NOVA_VALIDADE'){
-
-            $this->obParsed->novavalidade  = new stdClass();
+        if ($this->obParsed->modo == 'EXCLUSAO'){
             
-            $this->obParsed->novavalidade->inivalid  = $this->ob[1][20];
-            
-            $this->obParsed->novavalidade->fimvalid  = $this->ob[1][21];
+            $this->obParsed->config->empregador->nmRazao = $this->ob[1][10];            
 
-        } 
+        } else {
+
+            $this->obParsed->config->empregador->nmRazao = $this->ob[1][18];
+
+            $this->obParsed->indautoria = intval($this->ob[1][10]);
+
+            $this->obParsed->infosusp[0] = new stdClass();
+
+            $this->obParsed->infosusp[0]->codsusp = $this->ob[1][11];
+
+            $this->obParsed->infosusp[0]->indsusp = $this->ob[1][12];
+
+            $this->obParsed->infosusp[0]->dtdecisao = $this->ob[1][13];
+
+            $this->obParsed->infosusp[0]->inddeposito = $this->ob[1][14];
+            
+            $this->obParsed->dadosprocjud  = new stdClass();
+
+            $this->obParsed->dadosprocjud->ufvara  = $this->ob[1][15];
+
+            $this->obParsed->dadosprocjud->codmunic  = $this->ob[1][16];
+
+            $this->obParsed->dadosprocjud->idvara  = $this->ob[1][17];
+
+            if (isset($this->ob[1][19]) && $this->ob[1][19] == 'NOVA_VALIDADE'){
+
+                $this->obParsed->novavalidade  = new stdClass();
+                
+                $this->obParsed->novavalidade->inivalid  = $this->ob[1][20];
+                
+                $this->obParsed->novavalidade->fimvalid  = $this->ob[1][21];
+
+            }
+
+        }
 
 		return $this->obParsed;
     }

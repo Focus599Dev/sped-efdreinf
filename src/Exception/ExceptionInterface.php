@@ -17,4 +17,6 @@ namespace NFePHP\EFDReinf\Exception;
 
 interface ExceptionInterface
 {
+
 }
+

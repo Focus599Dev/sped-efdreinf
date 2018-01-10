@@ -24,33 +24,23 @@ use stdClass;
 class EvtExclusao extends Factory implements FactoryInterface
 {
     /**
-     * @var string
-     * NOTA: indica o XSD e o namespace do XML
-     */
-    protected $evtName = 'evtExclusao';
-    /**
-     * @var string
-     */
-    protected $evtTag = 'evtExclusao';
-    /**
-     * @var string
-     */
-    protected $evtAlias = 'R-9000';
-
-    /**
      * Constructor
      * @param string $config
      * @param stdClass $std
      * @param Certificate $certificate
-     * @param string date
+     * @param string $data
      */
     public function __construct(
         $config,
         stdClass $std,
         Certificate $certificate = null,
-        $date = ''
+        $data = ''
     ) {
-        parent::__construct($config, $std, $certificate, $date);
+        $params = new \stdClass();
+        $params->evtName = 'evtExclusao';
+        $params->evtTag = 'evtExclusao';
+        $params->evtAlias = 'R-9000';
+        parent::__construct($config, $std, $params, $certificate, $data);
     }
     
     /**
@@ -104,6 +94,6 @@ class EvtExclusao extends Factory implements FactoryInterface
         $this->node->appendChild($infoExclusao);
         $this->reinf->appendChild($this->node);
         //$this->xml = $this->dom->saveXML($this->reinf);
-        $this->sign();
+        $this->sign($this->evtTag);
     }
 }

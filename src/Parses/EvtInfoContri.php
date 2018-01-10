@@ -2,6 +2,7 @@
 
 namespace NFePHP\EFDReinf\Parses;
 
+
 /**
  * Class EFD-Reinf EvtInfoContri Event R-1000 constructor
  *
@@ -15,38 +16,11 @@ namespace NFePHP\EFDReinf\Parses;
  * @link      https://github.com/Focus599Dev/sped-efdreinf for the canonical source repository
  */
 
+
+use NFePHP\EFDReinf\Parses\Parse;
 use stdClass;
 
-class EvtInfoContri{
-    private $txt;
-    
-    private $ob;
-
-    private $obParsed;
-
-    public function __construct($txt){
-    	$this->txt = $txt;
-
-    	$this->obParsed = new stdClass();
-
-    	$this->ob = $this->convertTxtToArray($txt);
-    }
-
-    private function convertTxtToArray($txt){
-
-    	if (strlen($txt) > 0) {
-            //carrega a matriz com as linha do arquivo
-            $aDados = explode("\n", $txt);
-        }
-
-        $rows = array();
-
-        foreach ( $aDados as $data) {
-        	$rows[] = explode('|',$data);
-        }
-
-        return $rows;
-    }
+class EvtInfoContri extends Parse{
 
     public function convert(){
 
@@ -56,9 +30,9 @@ class EvtInfoContri{
     	
     	$this->obParsed->config->verProc = $this->ob[1][3];
 
-    	$this->obParsed->config->eventoVersion = '1_02_00';
+    	$this->obParsed->config->eventoVersion = $this->eventoVersion;
     	
-    	$this->obParsed->config->serviceVersion = '1_02_00';
+    	$this->obParsed->config->serviceVersion = $this->serviceVersion;
     	
     	$this->obParsed->config->empregador = new stdClass();
     	

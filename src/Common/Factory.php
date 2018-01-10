@@ -2,6 +2,19 @@
 
 namespace NFePHP\EFDReinf\Common;
 
+/**
+ * Classe Factory, performs build events
+ *
+ * @category  API
+ * @package   NFePHP\EFDReinf
+ * @copyright Copyright (c) 2017
+ * @license   https://www.gnu.org/licenses/lgpl-3.0.txt LGPLv3
+ * @license   https://www.gnu.org/licenses/gpl-3.0.txt GPLv3
+ * @license   https://opensource.org/licenses/mit-license.php MIT
+ * @author    Roberto L. Machado <linux.rlm at gmail dot com>
+ * @link      http://github.com/nfephp-org/sped-efdreinf for the canonical source repository
+ */
+
 use DateTime;
 use DOMDocument;
 use DOMElement;
@@ -63,15 +76,21 @@ abstract class Factory
     /**
      * @var string
      */
-    public $evtid = '';
+    public $evtTag;
+    /**
+     * @var string
+     */
+    public $evtName = '';
+    /**
+     * @var string
+     */
+    public $evtAlias = '';
+
+    
     /**
      * @var string
      */
     protected $xmlns = "http://www.reinf.esocial.gov.br/schemas/";
-    /**
-     * @var string
-     */
-    protected $xsi = "http://www.w3.org/2001/XMLSchema-instance";
     /**
      * @var Dom
      */
@@ -85,7 +104,7 @@ abstract class Factory
      */
     protected $xml;
     /**
-     * @var DOMNode
+     * @var \DOMElement
      */
     protected $reinf;
     /**
@@ -97,19 +116,11 @@ abstract class Factory
      */
     protected $node;
     /**
-     * @var array
-     */
-    protected $parameters = [];
-    /**
      * @var string
      */
-    protected $evtName = '';
+    public $evtid = '';
     /**
-     * @var string
-     */
-    protected $evtAlias = '';
-    /**
-     * @var Certificate
+     * @var Certificate|null
      */
     protected $certificate;
 
@@ -117,15 +128,16 @@ abstract class Factory
 
     /**
      * Constructor
-     *
      * @param string      $config
      * @param stdClass    $std
      * @param Certificate $certificate
+     * @param stdClass $params
      * @param string      $date
      */
     public function __construct(
         $config,
         stdClass $std,
+        stdClass $params,
         Certificate $certificate = null,
         $date = ''
     ) {
@@ -147,9 +159,14 @@ abstract class Factory
 
         $this->layoutStr = $this->strLayoutVer($this->layout);
         $this->certificate = $certificate;
+        $this->evtTag = $params->evtTag;
+        $this->evtName = $params->evtName;
+        $this->evtAlias = $params->evtAlias;
+        
         if (empty($std) || !is_object($std)) {
             throw EventsException::wrongArgument(1003, '');
         }
+        
         $this->jsonschema = realpath(
             __DIR__
             . "/../../jsonSchemes/$this->layoutStr/"
@@ -166,7 +183,7 @@ abstract class Factory
         //convert all data fields to lower case
         $this->std = $this->propertiesToLower($std);
         //validate input data with schema
-        $this->validInputData($this->std);
+        // $this->validInputData($this->std);
         //Adding forgotten or unnecessary fields.
         //This is done for standardization purposes.
         //Fields with no value will not be included by the builder.
@@ -176,9 +193,7 @@ abstract class Factory
 
     /**
      * Stringfy layout number
-     *
-     * @param type $layout
-     *
+     * @param string $layout
      * @return string
      */
     protected function strLayoutVer($layout)
@@ -193,9 +208,7 @@ abstract class Factory
 
     /**
      * Change properties names of stdClass to lower case
-     *
      * @param stdClass $data
-     *
      * @return stdClass
      */
     protected static function propertiesToLower(stdClass $data)
@@ -214,9 +227,7 @@ abstract class Factory
 
     /**
      * Validation json data from json Schema
-     *
      * @param stdClass $data
-     *
      * @return boolean
      * @throws \RuntimeException
      */
@@ -248,11 +259,11 @@ abstract class Factory
             $this->dom->formatOutput = false;
 
             // SAP esta mandando ID
-            $this->evtid = FactoryId::build(
-                $this->tpInsc,
-                $this->nrInsc,
-                $this->date
-            );
+            // $this->evtid = FactoryId::build(
+            //     $this->tpInsc,
+            //     $this->nrInsc,
+            //     $this->date
+            // );
 
             $this->main = '<Reinf xmlns="http://www.reinf.esocial.gov.br/schemas/envioLoteEventos/v' . $this->enviaLotVersion . '">' 
                 . '<loteEventos>'
@@ -282,7 +293,7 @@ abstract class Factory
             $this->dom->addChild(
                 $ideContri,
                 "tpInsc",
-                $this->tpInsc,
+                (string) $this->tpInsc,
                 true
             );
             
@@ -296,25 +307,45 @@ abstract class Factory
             $this->node->appendChild($ideContri);
         }
     }
-
+    
+    /**
+     * Returns alias of event
+     * @return string
+     */
     public function alias()
     {
         return $this->evtAlias;
     }
-
+    
+    /**
+     * Returns the Certificate::class
+     * @return Certificate|null
+     */
     public function getCertificate()
     {
         return $this->certificate;
     }
-
+    
+    /**
+     * Insert Certificate::class
+     * @param Certificate $certificate
+     */
     public function setCertificate(Certificate $certificate)
     {
         $this->certificate = $certificate;
     }
+    
+    /**
+     * Recover calculate ID
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->evtid;
+    }
 
     /**
      * Return xml of event
-     *
      * @return string
      */
     public function toXML()
@@ -366,8 +397,8 @@ abstract class Factory
         if (empty($this->xml)) {
             $this->toNode();
         }
-        //a assinatura só faz sentido no XML, os demais formatos
-        //não devem conter dados da assinatura
+        //signature only makes sense in XML, other formats should not contain
+        //signature data
         $xml = Signer::removeSignature($this->xml);
         $dom = new \DOMDocument();
         $dom->loadXML($xml);
@@ -393,20 +424,21 @@ abstract class Factory
      * @param \stdClass $data
      * @return \stdClass
      */
-    public function standardizeProperties(stdClass $data)
-    {
-        if (!is_file($this->jsonschema)) {
-            return $data;
-        }
-        $jsonSchemaObj = json_decode(file_get_contents($this->jsonschema));
-        $sc = new ParamsStandardize($jsonSchemaObj);
-        return $sc->stdData($data);
-    }
+    //public function standardizeProperties(stdClass $data)
+    //{
+    //    if (!is_file($this->jsonschema)) {
+    //        return $data;
+    //    }
+    //    $jsonSchemaObj = json_decode(file_get_contents($this->jsonschema));
+    //    $sc = new ParamsStandardize($jsonSchemaObj);
+    //    return $sc->stdData($data);
+    //}
 
     /**
      * Sign and validate XML with XSD, can throw Exception
+     * @param string $tagsigned tag to be base of signature
      */
-    protected function sign()
+    protected function sign($tagsigned = '')
     {
         $xml = $this->dom->saveXML($this->reinf);
         $xml = Strings::clearXmlString($xml);
@@ -415,7 +447,7 @@ abstract class Factory
             $xml = Signer::sign(
                 $this->certificate,
                 $xml,
-                $this->evtTag,
+                $tagsigned,
                 'id',
                 OPENSSL_ALGO_SHA256,
                 [true, false, null, null]
@@ -423,6 +455,7 @@ abstract class Factory
             //validation by XSD schema throw Exception if dont pass
             // Validator::isValid($xml, $this->schema);
         }
+
         $this->xml = $xml;
     }
 }
