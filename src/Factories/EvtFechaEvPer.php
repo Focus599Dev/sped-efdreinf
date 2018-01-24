@@ -52,115 +52,139 @@ class EvtFechaEvPer extends Factory implements FactoryInterface
         //o idEvento pode variar de evento para evento
         //então cada factory individualmente terá de construir o seu
         $ideEvento = $this->dom->createElement("ideEvento");
+        
         $this->dom->addChild(
             $ideEvento,
             "perApur",
             $this->std->perapur,
             true
         );
+
         $this->dom->addChild(
             $ideEvento,
             "tpAmb",
             $this->tpAmb,
             true
         );
+
         $this->dom->addChild(
             $ideEvento,
             "procEmi",
             $this->procEmi,
             true
         );
+
         $this->dom->addChild(
             $ideEvento,
             "verProc",
             $this->verProc,
             true
         );
+
         $this->node->insertBefore($ideEvento, $ideContri);
         
         if (!empty($this->std->iderespinf)) {
+            
             $ide = $this->std->iderespinf;
+            
             $ideRespInf = $this->dom->createElement("ideRespInf");
+            
             $this->dom->addChild(
                 $ideRespInf,
                 "nmResp",
                 $ide->nmresp,
                 true
             );
+
             $this->dom->addChild(
                 $ideRespInf,
                 "cpfResp",
                 $ide->cpfresp,
                 true
             );
+
             $this->dom->addChild(
                 $ideRespInf,
                 "telefone",
                 !empty($ide->telefone) ? $ide->telefone : null,
                 false
             );
+
             $this->dom->addChild(
                 $ideRespInf,
                 "email",
                 !empty($ide->email) ? $ide->email : null,
                 false
             );
+
             $this->node->appendChild($ideRespInf);
+
         }
         
         
         $infoFech = $this->dom->createElement("infoFech");
+
         $this->dom->addChild(
             $infoFech,
             "evtServTm",
             $this->std->evtservtm,
             true
         );
+
         $this->dom->addChild(
             $infoFech,
             "evtServPr",
             $this->std->evtservpr,
             true
         );
+
         $this->dom->addChild(
             $infoFech,
             "evtAssDespRec",
             $this->std->evtassdesprec,
             true
         );
+
         $this->dom->addChild(
             $infoFech,
             "evtAssDespRep",
             $this->std->evtassdesprep,
             true
         );
+
         $this->dom->addChild(
             $infoFech,
             "evtComProd",
             $this->std->evtcomprod,
             true
         );
+
         $this->dom->addChild(
             $infoFech,
             "evtCPRB",
             $this->std->evtcprb,
             true
         );
+
         $this->dom->addChild(
             $infoFech,
             "evtPgtos",
             $this->std->evtpgtos,
             true
         );
+
         $this->dom->addChild(
             $infoFech,
             "compSemMovto",
             !empty($this->std->compsemmovto) ? $this->std->compsemmovto : null,
             false
         );
+
         $this->node->appendChild($infoFech);
+        
         $this->reinf->appendChild($this->node);
-        //$this->xml = $this->dom->saveXML($this->reinf);
+        
         $this->sign($this->evtTag);
+        
     }
 }

@@ -301,13 +301,29 @@ class EvtServPrest extends Parse {
 
                 $lastInfoProcJud = $aux;
 
+            } else if ($cabecario == 'DESPPROCJUDINFOPROC'){
+
+                $aux = new stdClass();
+
+                if (!isset($lastInfoProcJud->despprocjud)){
+                    
+                    $lastInfoProcJud->despprocjud = array();
+
+                }
+
+                $aux->vlrDespCustas = $auxOb[1];
+                
+                $aux->vlrDespAdvogados = $auxOb[2];
+
+                $lastInfoProcJud->despprocjud[] = $aux;
+
             } else if ($cabecario == 'IDEADVOGADOPROCJUD'){
 
                 $aux = new stdClass();
 
-                if (!isset($lastInfoProcJud->ideadvogado)){
+                if (!isset($lastInfoProcJud->despprocjud->ideadvogado)){
                     
-                    $lastInfoProcJud->ideadvogado = array();
+                    $lastInfoProcJud->despprocjud->ideadvogado = array();
 
                 }
 
@@ -317,7 +333,7 @@ class EvtServPrest extends Parse {
 
                 $aux->vlradvogado = $auxOb[3];
 
-                $lastInfoProcJud->ideadvogado[] = $aux;
+                $lastInfoProcJud->despprocjud->ideadvogado[] = $aux;
 
             }  else if ($cabecario == 'ORIGEMRECURSOS'){
 
@@ -389,8 +405,8 @@ class EvtServPrest extends Parse {
 
                 $aux = new stdClass();
 
-                if (!isset($lastInfoProcJudPJ->ideadvogado)){
-                    $lastInfoProcJudPJ->ideadvogado = array();
+                if (!isset($lastInfoProcJudPJ->despprocjud->ideadvogado)){
+                    $lastInfoProcJudPJ->despprocjud->ideadvogado = array();
                 }
 
                 $aux->tpinscadvogado = $auxOb[1];
@@ -399,7 +415,8 @@ class EvtServPrest extends Parse {
 
                 $aux->vlradvogado = $auxOb[2];
 
-                $lastInfoProcJudPJ->ideadvogado[] = $aux;
+                $lastInfoProcJudPJ->despprocjud->ideadvogado[] = $aux;
+                
             }  else if ($cabecario == 'ORIGEMRECURSOSPJ'){
 
                 $aux = new stdClass();

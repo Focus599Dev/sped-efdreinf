@@ -37,9 +37,13 @@ class EvtReabreEvPer extends Factory implements FactoryInterface
         $data = ''
     ) {
         $params = new \stdClass();
+        
         $params->evtName = 'evtReabreEvPer';
+        
         $params->evtTag = 'evtReabreEvPer';
+        
         $params->evtAlias = 'R-2098';
+        
         parent::__construct($config, $std, $params, $certificate, $data);
     }
     
@@ -52,33 +56,39 @@ class EvtReabreEvPer extends Factory implements FactoryInterface
         //o idEvento pode variar de evento para evento
         //então cada factory individualmente terá de construir o seu
         $ideEvento = $this->dom->createElement("ideEvento");
+        
         $this->dom->addChild(
             $ideEvento,
             "perApur",
             $this->std->perapur,
             true
         );
+
         $this->dom->addChild(
             $ideEvento,
             "tpAmb",
             $this->tpAmb,
             true
         );
+
         $this->dom->addChild(
             $ideEvento,
             "procEmi",
             $this->procEmi,
             true
         );
+
         $this->dom->addChild(
             $ideEvento,
             "verProc",
             $this->verProc,
             true
         );
+
         $this->node->insertBefore($ideEvento, $ideContri);
+
         $this->reinf->appendChild($this->node);
-        //$this->xml = $this->dom->saveXML($this->reinf);
+
         $this->sign($this->evtTag);
     }
 }

@@ -21,7 +21,7 @@ use stdClass;
 class EvtServTom extends Parse {
   
     public function convert(){
-
+        
     	$this->obParsed->config = new stdClass();
 
     	$this->obParsed->config->tpAmb = $this->ob[1][1];

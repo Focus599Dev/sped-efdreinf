@@ -139,6 +139,7 @@ class Tools extends ToolsBase
             . "</soapenv:Envelope>";
         
         $msgSize = strlen($envelope);
+        
         $parameters = [
             "Content-Type: text/xml;charset=UTF-8",
             "SOAPAction: \"$this->action\"",
