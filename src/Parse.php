@@ -72,6 +72,7 @@ class Parse{
     public static function __callStatic($name, $arguments){
 
     	$name = str_replace('-', '', strtolower($name));
+        
         $realname = $name;
         
         if (substr($name, 0, 1) == 's') {

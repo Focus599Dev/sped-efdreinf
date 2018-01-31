@@ -43,9 +43,13 @@ class EvtPgtosDivs extends Factory implements FactoryInterface
         $data = ''
     ) {
         $params = new \stdClass();
-        $params->evtName = 'evtPagtoDivs';
+        
+        $params->evtName = 'evtPgtosDivs';
+        
         $params->evtTag = 'evtPgtosDivs';
+        
         $params->evtAlias = 'R-2070';
+        
         parent::__construct($config, $std, $params, $certificate, $data);
     }
     
@@ -66,12 +70,14 @@ class EvtPgtosDivs extends Factory implements FactoryInterface
             true
         );
         
-        $this->dom->addChild(
-            $ideEvento,
-            "nrRecibo",
-            !empty($this->std->nrrecibo) ? $this->std->nrrecibo : null,
-            true
-        );
+        if($this->std->indretif == 1){
+            $this->dom->addChild(
+                $ideEvento,
+                "nrRecibo",
+                !empty($this->std->nrrecibo) ? $this->std->nrrecibo : null,
+                true
+            );
+        }
         
         $this->dom->addChild(
             $ideEvento,
@@ -200,6 +206,7 @@ class EvtPgtosDivs extends Factory implements FactoryInterface
                 $info->indnif,
                 true
             );
+
             $this->dom->addChild(
                 $infoFiscal,
                 "nifBenef",
@@ -222,16 +229,18 @@ class EvtPgtosDivs extends Factory implements FactoryInterface
 
             $mol = $this->std->infomolestia;
             
-            $infoMolestia = $this->dom->createElement("infoMolestia");
-            
-            $this->dom->addChild(
-                $infoMolestia,
-                "dtLaudo",
-                $mol->dtlaudo,
-                true
-            );
+            if ( $mol->dtlaudo ){
+                $infoMolestia = $this->dom->createElement("infoMolestia");
+                
+                $this->dom->addChild(
+                    $infoMolestia,
+                    "dtLaudo",
+                    $mol->dtlaudo,
+                    true
+                );
 
-            $ideBenef->appendChild($infoMolestia);
+                $ideBenef->appendChild($infoMolestia);
+            }
         }
         
         $infoPgto = $this->dom->createElement("infoPgto");

@@ -18,7 +18,7 @@ namespace NFePHP\EFDReinf\Parses;
 use NFePHP\EFDReinf\Parses\Parse;
 use stdClass;
 
-class evtServPrest extends Parse {
+class EvtServPrest extends Parse {
   
     public function convert(){
 

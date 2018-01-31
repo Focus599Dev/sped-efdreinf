@@ -139,13 +139,14 @@ class Tools extends ToolsBase
             . "</soapenv:Envelope>";
         
         $msgSize = strlen($envelope);
-        
+
         $parameters = [
             "Content-Type: text/xml;charset=UTF-8",
             "SOAPAction: \"$this->action\"",
             "Content-length: $msgSize"
         ];
 
+        print_r($envelope);
         return (string) $this->soap->send(
             $this->method,
             $this->uri,

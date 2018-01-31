@@ -18,9 +18,11 @@ namespace NFePHP\EFDReinf\Parses;
 use NFePHP\EFDReinf\Parses\Parse;
 use stdClass;
 
-class EvtServPrest extends Parse {
+class EvtPgtosDivs extends Parse {
   
     public function convert(){
+
+        $this->eventoVersion = '1_01_01';
 
     	$this->obParsed->config = new stdClass();
 
@@ -36,7 +38,7 @@ class EvtServPrest extends Parse {
     	
     	$this->obParsed->config->empregador->tpInsc = $this->ob[1][4];
 
-    	$this->obParsed->config->empregador->nrInsc = substr(preg_replace('/\D/', '', $this->ob[0][0]), 0, 8);
+    	$this->obParsed->config->empregador->nrInsc = $this->ob[1][5];
 
     	$this->obParsed->config->transmissor = $this->obParsed->config->empregador;
     	
@@ -60,7 +62,31 @@ class EvtServPrest extends Parse {
 
         $this->obParsed->nmrazaobenef = $this->ob[1][12];
 
-        $this->std->ideestab = array();
+        $this->obParsed->inforesidext  = new stdClass();
+
+        $this->obParsed->inforesidext->paisresid =  $this->ob[1][13];
+        
+        $this->obParsed->inforesidext->dsclograd =  $this->ob[1][14];
+
+        $this->obParsed->inforesidext->nrlograd =  $this->ob[1][15];
+
+        $this->obParsed->inforesidext->complem =  $this->ob[1][16];
+        
+        $this->obParsed->inforesidext->bairro =  $this->ob[1][17];
+        
+        $this->obParsed->inforesidext->cidade =  $this->ob[1][18];
+
+        $this->obParsed->inforesidext->codpostal =  $this->ob[1][19];
+
+        $this->obParsed->inforesidext->indnif =  $this->ob[1][20];
+        
+        $this->obParsed->inforesidext->nifbenef =  $this->ob[1][21];
+
+        $this->obParsed->inforesidext->relfontepagad =  $this->ob[1][22];
+
+        $this->obParsed->infomolestia = new stdClass();
+
+        $this->obParsed->infomolestia->dtlaudo =  $this->ob[1][23];
 
         $index = 2;
 
@@ -76,51 +102,15 @@ class EvtServPrest extends Parse {
         
         $lastInfoProcJudPJ = null;
 
+        $this->obParsed->ideestab = array();
+
         for ($i = $index; $i < count($this->ob); $i++){
             
             $auxOb = $this->ob[$i];
 
             $cabecario = $auxOb[0];
 
-            if ($cabecario == 'INFORESIDEXT'){
-
-                $this->obParsed->inforesidext  = new stdClass();
-
-                $this->obParsed->inforesidext->paisresid = $auxOb[1];
-                
-                $this->obParsed->inforesidext->dsclograd = $auxOb[2];
-
-                $this->obParsed->inforesidext->nrlograd = $auxOb[3];
-
-                $this->obParsed->inforesidext->complem = $auxOb[4];
-                
-                $this->obParsed->inforesidext->bairro = $auxOb[5];
-                
-                $this->obParsed->inforesidext->cidade = $auxOb[6];
-
-                $this->obParsed->inforesidext->codpostal = $auxOb[7];
-
-                $this->obParsed->inforesidext = $aux;
-
-            } else if ($cabecario == 'INFOFISCALEXT'){
-
-                if(!$this->obParsed->inforesidext){
-                    $this->obParsed->inforesidext = new stdClass();
-                }
-
-                $this->obParsed->inforesidext->indnif = $auxOb[1];
-                
-                $this->obParsed->inforesidext->nifbenef = $auxOb[2];
-
-                $this->obParsed->inforesidext->relfontepagad = $auxOb[3];
-
-            } else if ($cabecario == 'INFOMOLESTIA'){
-
-                $this->obParsed->infomolestia = new stdClass();
-
-                $this->obParsed->infomolestia->dtlaudo = $auxOb[1];
-
-            } else if ($cabecario == 'INFOPGTO'){
+            if ($cabecario == 'INFOPGTO'){
 
                 $aux = new stdClass();
 
@@ -321,9 +311,15 @@ class EvtServPrest extends Parse {
 
                 $aux = new stdClass();
 
-                if (!isset($lastInfoProcJud->despprocjud->ideadvogado)){
-                    
-                    $lastInfoProcJud->despprocjud->ideadvogado = array();
+                $index = count($lastInfoProcJud->despprocjud);
+
+                if ($index > 0){
+                    $index = $index -1;
+                }
+
+                if (!isset($lastInfoProcJud->despprocjud[$index]->ideadvogado)){
+
+                    $lastInfoProcJud->despprocjud[$index]->ideadvogado = array();
 
                 }
 
