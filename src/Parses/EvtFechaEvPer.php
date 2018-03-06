@@ -50,22 +50,23 @@ class EvtFechaEvPer extends Parse {
 
         $index = 2;
 
-
         for ($i = $index; $i < count($this->ob); $i++){
             
             $auxOb = $this->ob[$i];
 
             $cabecario = $auxOb[0];
 
-            if ($cabecario == 'IDERESPINf'){
-
-                $this->obParsed->nmresp = $auxOb[1];
-
-                $this->obParsed->cpfresp = $auxOb[2];
+            if ($cabecario == 'IDERESPINF'){
                 
-                $this->obParsed->telefone = $auxOb[3];
+                $this->obParsed->iderespinf = new stdClass();
+                
+                $this->obParsed->iderespinf->nmresp = $auxOb[1];
 
-                $this->obParsed->email = $auxOb[4];
+                $this->obParsed->iderespinf->cpfresp = $auxOb[2];
+                
+                $this->obParsed->iderespinf->telefone = $auxOb[3];
+
+                $this->obParsed->iderespinf->email = $auxOb[4];
 
             } else if ($cabecario == 'INFOFECH'){
 
