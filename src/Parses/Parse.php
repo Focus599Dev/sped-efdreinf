@@ -36,9 +36,9 @@ class Parse{
 
     	$this->ob = $this->convertTxtToArray($txt);
 
-        $this->eventoVersion = '1_02_00';
+        $this->eventoVersion = '1_03_00';
 
-        $this->serviceVersion = '1_02_00';
+        $this->serviceVersion = '1_03_00';
     }
 
     protected function convertTxtToArray($txt){
@@ -55,6 +55,10 @@ class Parse{
         }
 
         return $rows;
+    }
+
+    public function getTxtArray(){
+        return $this->ob;
     }
 }
 

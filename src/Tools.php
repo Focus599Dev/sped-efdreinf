@@ -37,10 +37,29 @@ class Tools extends ToolsBase
     ];
     protected $objHeader;
     protected $xmlns;
+    
+    /**
+     * @var array
+     */
     protected $uri = [
         '1' => '',
-        '2' => 'https://preprodefdreinf.receita.fazenda.gov.br/RecepcaoLoteReinf.svc'
+        '2' => 'https://preprodefdreinf.receita.fazenda.gov.br/RecepcaoLoteReinf.svc',
+        '3' => 'https://preprodefdreinf.receita.fazenda.gov.br/RecepcaoLoteReinf.svc'
     ];
+
+    /**
+     *
+     * @var array
+     */
+    protected $uriconsulta = [
+        '1' => '',
+        '2' => 'https://preprodefdreinf.receita.fazenda.gov.br/ConsultasReinf.svc',
+        '3' => 'https://preprodefdreinf.receita.fazenda.gov.br/ConsultasReinf.svc'
+    ];
+
+    /**
+     * @var string
+     */
     protected $action;
     protected $method;
     protected $parameters;
@@ -61,11 +80,25 @@ class Tools extends ToolsBase
     
     /**
      * Event batch query
-     * @param string $protocolo
+     * @param string $recibofechamento
      * @return string
      */
-    public function consultaLoteEventos($protocolo)
+    public function consultar($recibofechamento)
     {
+        if (empty($recibofechamento)) {
+            return '';
+        }
+        $this->method = "ConsultaInformacoesConsolidadas";
+        $this->action = "http://sped.fazenda.gov.br/ConsultasReinf/".$this->method;
+        $request = "<sped:tipoInscricaoContribuinte>$this->tpInsc</sped:tipoInscricaoContribuinte>";
+        $request .= "<sped:numeroInscricaoContribuinte>$this->nrInsc</sped:numeroInscricaoContribuinte>";
+        $request .= "<sped:numeroReciboFechamento>$recibofechamento</sped:numeroReciboFechamento>";
+        $body = "<sped:ConsultaInformacoesConsolidadas>"
+            . $request
+            . "</sped:ConsultaInformacoesConsolidadas>";
+        
+        $this->lastResponse = $this->sendRequest($body);
+        return $this->lastResponse;
     }
     
     /**
@@ -89,8 +122,6 @@ class Tools extends ToolsBase
         $this->method = "ReceberLoteEventos";
         
         $this->action = "http://sped.fazenda.gov.br/RecepcaoLoteReinf/ReceberLoteEventos";
-
-        $this->uri = 'https://preprodefdreinf.receita.fazenda.gov.br/RecepcaoLoteReinf.svc';
 
         $request = '';
 
@@ -146,9 +177,17 @@ class Tools extends ToolsBase
             "Content-length: $msgSize"
         ];
 
+        if ($this->method == 'ReceberLoteEventos') {
+            $url = $this->uri[$this->tpAmb];
+        } else {
+            $url = $this->uriconsulta[$this->tpAmb];
+        }
+
+        $this->lastRequest = $envelope;
+
         return (string) $this->soap->send(
             $this->method,
-            $this->uri,
+            $url,
             $this->action,
             $envelope,
             $parameters
