@@ -255,7 +255,9 @@ abstract class Factory
     {
         if (empty($this->dom)) {
             $this->dom = new Dom('1.0', 'UTF-8');
+            
             $this->dom->preserveWhiteSpace = false;
+            
             $this->dom->formatOutput = false;
 
             // SAP esta mandando ID
@@ -265,13 +267,13 @@ abstract class Factory
             //     $this->date
             // );
 
-            $this->main = '<Reinf xmlns="http://www.reinf.esocial.gov.br/schemas/envioLoteEventos/v' . $this->enviaLotVersion . '">' 
-                . '<loteEventos>'
-                . '<evento id="' . $this->evtid . '">'
-                . '%s'
-                . '</evento>'
-                . '</loteEventos>'
-                . '</Reinf>';
+            // $this->main = '<Reinf xmlns="http://www.reinf.esocial.gov.br/schemas/envioLoteEventos/v' . $this->enviaLotVersion . '">' 
+            //     . '<loteEventos>'
+            //     . '<evento id="' . $this->evtid . '">'
+            //     . '%s'
+            //     . '</evento>'
+            //     . '</loteEventos>'
+            //     . '</Reinf>';
 
             $xml = '<Reinf xmlns="' . $this->xmlns . $this->evtName . '/' .$this->layoutStr . '">'
                 . "</Reinf>";
@@ -356,7 +358,8 @@ abstract class Factory
 
         $aux = $this->clearXml($this->xml);
 
-        return str_replace('%s', $aux, $this->main);
+        // return str_replace('%s', $aux, $this->main);
+        return $aux;
     }
 
     abstract protected function toNode();
@@ -453,7 +456,10 @@ abstract class Factory
                 [true, false, null, null]
             );
             //validation by XSD schema throw Exception if dont pass
-            // Validator::isValid($xml, $this->schema);
+
+            if ($this->schema) {
+                Validator::isValid($xml, $this->schema);
+            }
         }
 
         $this->xml = $xml;

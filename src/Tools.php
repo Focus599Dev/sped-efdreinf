@@ -117,21 +117,42 @@ class Tools extends ToolsBase
         if ($nEvt > 100) {
             throw ProcessException::wrongArgument(2000, $nEvt);
         }
-
       
         $this->method = "ReceberLoteEventos";
         
         $this->action = "http://sped.fazenda.gov.br/RecepcaoLoteReinf/ReceberLoteEventos";
 
+        $xml = "";
+
         $request = '';
 
         foreach ($eventos as $evento) {
-            $request .= $evento->toXML();
+            
+            if (!is_a($evento, '\NFePHP\EFDReinf\Common\FactoryInterface')) {
+                throw ProcessException::wrongArgument(2002, '');
+            }
+
+            $this->checkCertificate($evento);
+
+            $xml .= '<evento id="' . $evento->getId() . '">';
+
+                $xml .= $evento->toXML();
+
+            $xml .= '</evento>';
+
         }
+
+         $request = '<Reinf xmlns="http://www.reinf.esocial.gov.br/schemas/envioLoteEventos/v' . $this->serviceVersion . '">'
+            . '<loteEventos>'
+            . $xml
+            . '</loteEventos>'
+            . '</Reinf>';
         
-        $body = $request;
-        
-        $this->lastRequest = $body;
+        $body = '<sped:ReceberLoteEventos>'
+            . '<sped:loteEventos>'
+            .       $request
+            . '</sped:loteEventos>'
+            . '</sped:ReceberLoteEventos>';
 
         $this->lastResponse = $this->sendRequest($body);
 
@@ -161,11 +182,7 @@ class Tools extends ToolsBase
         $envelope .= ">"
             . "<soapenv:Header></soapenv:Header>"
             . "<soapenv:Body>"
-            . "<sped:ReceberLoteEventos>"
-            . "<sped:loteEventos>"
             . $request
-            . "</sped:loteEventos>"
-            . "</sped:ReceberLoteEventos>"
             . "</soapenv:Body>"
             . "</soapenv:Envelope>";
         
