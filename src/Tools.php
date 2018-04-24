@@ -43,8 +43,8 @@ class Tools extends ToolsBase
      */
     protected $uri = [
         '1' => '',
-        '2' => 'https://preprodefdreinf.receita.fazenda.gov.br/RecepcaoLoteReinf.svc',
-        '3' => 'https://preprodefdreinf.receita.fazenda.gov.br/RecepcaoLoteReinf.svc'
+        '2' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/RecepcaoLoteReinf.svc',
+        '3' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/RecepcaoLoteReinf.svc'
     ];
 
     /**

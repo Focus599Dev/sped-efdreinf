@@ -22,8 +22,6 @@ class EvtPgtosDivs extends Parse {
   
     public function convert(){
 
-        $this->eventoVersion = '1_01_01';
-
     	$this->obParsed->config = new stdClass();
 
     	$this->obParsed->config->tpAmb = $this->ob[1][1];
