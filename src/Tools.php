@@ -42,7 +42,7 @@ class Tools extends ToolsBase
      * @var array
      */
     protected $uri = [
-        '1' => '',
+        '1' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/RecepcaoLoteReinf.svc',
         '2' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/RecepcaoLoteReinf.svc',
         '3' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/RecepcaoLoteReinf.svc'
     ];
@@ -52,9 +52,9 @@ class Tools extends ToolsBase
      * @var array
      */
     protected $uriconsulta = [
-        '1' => '',
-        '2' => 'https://preprodefdreinf.receita.fazenda.gov.br/ConsultasReinf.svc',
-        '3' => 'https://preprodefdreinf.receita.fazenda.gov.br/ConsultasReinf.svc'
+        '1' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/ConsultasReinf.svc',
+        '2' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/ConsultasReinf.svc',
+        '3' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/ConsultasReinf.svc'
     ];
 
     /**
@@ -237,11 +237,11 @@ class Tools extends ToolsBase
     }
 
 
-    public function readReturn ($xml){
+    public function readReturn ($xml, $tagMain = 'ReceberLoteEventosResult'){
 
-        $xml = substr($xml, strpos($xml, "<ReceberLoteEventosResult"));
+        $xml = substr($xml, strpos($xml, "<" . $tagMain));
                                         
-        $xml = substr($xml, 0, strpos($xml, "</ReceberLoteEventosResult>") + strlen('</ReceberLoteEventosResult>'));
+        $xml = substr($xml, 0, strpos($xml, '</' . $tagMain . '>') + strlen('</' . $tagMain . '>'));
             
         $xml = simplexml_load_string($xml);
 
