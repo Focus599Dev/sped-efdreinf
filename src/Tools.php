@@ -42,7 +42,7 @@ class Tools extends ToolsBase
      * @var array
      */
     protected $uri = [
-        '1' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/RecepcaoLoteReinf.svc',
+        '1' => 'https://reinf.receita.fazenda.gov.br/WsREINF/RecepcaoLoteReinf.svc',
         '2' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/RecepcaoLoteReinf.svc',
         '3' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/RecepcaoLoteReinf.svc'
     ];
@@ -52,7 +52,7 @@ class Tools extends ToolsBase
      * @var array
      */
     protected $uriconsulta = [
-        '1' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/ConsultasReinf.svc',
+        '1' => 'https://reinf.receita.fazenda.gov.br/WsREINF/ConsultasReinf.svc',
         '2' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/ConsultasReinf.svc',
         '3' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsREINF/ConsultasReinf.svc'
     ];
