@@ -36,9 +36,9 @@ class Parse{
 
     	$this->ob = $this->convertTxtToArray($txt);
 
-        $this->eventoVersion = '1_03_02';
+        $this->eventoVersion = '1_04_00';
 
-        $this->serviceVersion = '1_03_02';
+        $this->serviceVersion = '1_04_00';
     }
 
     protected function convertTxtToArray($txt){
