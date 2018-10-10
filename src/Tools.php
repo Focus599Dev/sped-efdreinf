@@ -19,7 +19,7 @@ use NFePHP\Common\Validator;
 use NFePHP\EFDReinf\Common\Tools as ToolsBase;
 use NFePHP\EFDReinf\Common\FactoryInterface;
 use NFePHP\EFDReinf\Common\Soap\SoapCurl;
-use NFePHP\EFDReinf\Common\Soap\SoapInterface;
+use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\EFDReinf\Exception\ProcessException;
 
 class Tools extends ToolsBase
@@ -154,45 +154,23 @@ class Tools extends ToolsBase
             . '</sped:loteEventos>'
             . '</sped:ReceberLoteEventos>';
 
+
         $this->lastResponse = $this->sendRequest($body);
 
         return $this->lastResponse;
     }
-    
+
     /**
-     * Send request to webservice
+     * Send request message to webservice
+     * @param array $parameters
      * @param string $request
      * @return string
-     */
-    protected function sendRequest($request)
+    */
+    protected function sendRequest($request, array $parameters = [])
     {
-        if (empty($this->soap)) {
-            $this->soap = new SoapCurl($this->certificate);
-        }
-        $envelope = '<?xml version="1.0" encoding="utf-8"?>' . chr(10) . '<soapenv:Envelope ';
-        
-        $attr = array();
-        
-        foreach ($this->soapnamespaces as $key => $xmlns) {
-            $attr[] = "$key=\"$xmlns\"";
-        }
+        $this->checkSoap();
 
-        $envelope .= implode(' ', $attr);
-
-        $envelope .= ">"
-            . "<soapenv:Header></soapenv:Header>"
-            . "<soapenv:Body>"
-            . $request
-            . "</soapenv:Body>"
-            . "</soapenv:Envelope>";
-        
-        $msgSize = strlen($envelope);
-
-        $parameters = [
-            "Content-Type: text/xml;charset=UTF-8",
-            "SOAPAction: \"$this->action\"",
-            "Content-length: $msgSize"
-        ];
+        $this->makeHeader();
 
         if ($this->method == 'ReceberLoteEventos') {
             $url = $this->uri[$this->tpAmb];
@@ -200,15 +178,33 @@ class Tools extends ToolsBase
             $url = $this->uriconsulta[$this->tpAmb];
         }
 
-        $this->lastRequest = $envelope;
+        $this->lastRequest = $request;
 
         return (string) $this->soap->send(
-            $this->method,
             $url,
+            $this->method,
             $this->action,
-            $envelope,
-            $parameters
+            1,
+            $parameters,
+            $this->soapnamespaces,
+            $request,
+            $this->objHeader
         );
+    }
+
+    private function makeHeader(){
+
+        $header = new \stdClass();
+
+        $header->data = array();
+        
+        $header->emptyHeader = true;
+
+        $header->name = null;
+
+        $header->namespace = null;
+
+        $this->objHeader = $header;
     }
 
 
@@ -246,5 +242,11 @@ class Tools extends ToolsBase
         $xml = simplexml_load_string($xml);
 
         return $xml;
+    }
+
+    protected function checkSoap(){
+        if (empty($this->soap)) {
+            $this->soap = new SoapCurl($this->certificate);
+        }
     }
 }
