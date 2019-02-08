@@ -52,7 +52,7 @@ class Tools extends ToolsBase
      * @var array
      */
     protected $uriconsulta = [
-        '1' => ' https://reinf.receita.fazenda.gov.br/WsReinfConsultas/ConsultasReinf.svc',
+        '1' => 'https://reinf.receita.fazenda.gov.br/WsReinfConsultas/ConsultasReinf.svc',
         '2' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsReinfConsultas/ConsultasReinf.svc',
         '3' => 'https://preprodefdreinf.receita.fazenda.gov.br/WsReinfConsultas/ConsultasReinf.svc'
     ];
