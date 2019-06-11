@@ -1,19 +1,19 @@
-<?php
+<?php 
 
 namespace NFePHP\EFDReinf\Factories;
 
 /**
- * Class EFD-Reinf EvtTotal Event R-5001 constructor
- *
- * @category  API
- * @package   NFePHP\EFDReinf
- * @copyright NFePHP Copyright (c) 2017
- * @license   http://www.gnu.org/licenses/lgpl.txt LGPLv3+
- * @license   https://opensource.org/licenses/MIT MIT
- * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
- * @author    Roberto L. Machado <linux.rlm at gmail dot com>
- * @link      http://github.com/nfephp-org/sped-efdreinf for the canonical source repository
- */
+* Class EFD-Reinf EvtTotal Event R-9001 constructor
+*
+* @category  API
+* @package   NFePHP\EFDReinf
+* @copyright NFePHP Copyright (c) 2017
+* @license   http://www.gnu.org/licenses/lgpl.txt LGPLv3+
+* @license   https://opensource.org/licenses/MIT MIT
+* @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+* @author    Roberto L. Machado <linux.rlm at gmail dot com>
+* @link      http://github.com/nfephp-org/sped-efdreinf for the canonical source repository
+*/
 
 use NFePHP\EFDReinf\Common\Factory;
 use NFePHP\EFDReinf\Common\FactoryInterface;
@@ -23,14 +23,15 @@ use stdClass;
 
 class EvtTotal extends Factory implements FactoryInterface
 {
-    /**
+	/**
      * Constructor
      * @param string $config
      * @param stdClass $std
      * @param Certificate $certificate
      * @param string $data
      */
-    public function __construct(
+
+	public function __construct(
         $config,
         stdClass $std,
         Certificate $certificate = null,
@@ -39,321 +40,465 @@ class EvtTotal extends Factory implements FactoryInterface
         $params = new \stdClass();
         $params->evtName = 'evtTotal';
         $params->evtTag = 'evtTotal';
-        $params->evtAlias = 'R-5001';
+        $params->evtAlias = 'R-9001';
         parent::__construct($config, $std, $params, $certificate, $data);
     }
-    
+
     /**
      * Node constructor
      */
     protected function toNode()
     {
-        $ideContri = $this->node->getElementsByTagName('ideContri')->item(0);
-        //o idEvento pode variar de evento para evento
+    	$ideContri = $this->node->getElementsByTagName('ideContri')->item(0);
+    	//o idEvento pode variar de evento para evento
         //então cada factory individualmente terá de construir o seu
         $ideEvento = $this->dom->createElement("ideEvento");
+
         $this->dom->addChild(
-            $ideEvento,
-            "perApur",
-            $this->std->perapur,
+        	$ideEvento,
+        	"nmRazao",
+        	$this->std->nmrazao,
+        	true
+        );
+
+        $this->dom->addChild(
+        	$ideEvento,
+        	"perApur",
+        	$this->std->perapur,
+        	true
+        );
+        $this->node->insert($ideEvento, $ideContri);
+
+        $ideContri = $this->dom->createElement("ideContri");
+
+        $this->dom->addChild(
+            $ideContri,
+            "tpInsc",
+            $this->std->tpinsc,
             true
         );
-        $this->node->insertBefore($ideEvento, $ideContri);
-        //tag deste evento em particular
-        $ideRecRetorno = $this->dom->createElement("ideRecRetorno");
+
+        $this->dom->addChild(
+            $ideContri,
+            "nrInsc",
+            $this->std->nrinsc,
+            true
+        );
+
+        $this->node->insert($ideContri, $ideRecRetorno);
+
+        $ideRecRetorno = $this->dom->createElement(">ideRecRetorno");
+
         $ideStatus = $this->dom->createElement("ideStatus");
+
         $this->dom->addChild(
-            $ideStatus,
-            "cdRetorno",
-            $this->std->cdretorno,
-            true
+        	$ideStatus,
+        	"cdRetorno",
+        	$this->std->cdretorno,
+        	true
         );
+
         $this->dom->addChild(
-            $ideStatus,
-            "descRetorno",
-            $this->std->descretorno,
-            true
+        	$ideStatus,
+        	"descRetorno",
+        	$this->std->descretorno,
+        	true
         );
+
         if (!empty($this->std->regocorrs)) {
-            foreach ($this->std->regocorrs as $r) {
-                $regOcorrs = $this->dom->createElement("regOcorrs");
-                $this->dom->addChild(
-                    $regOcorrs,
-                    "tpOcorr",
-                    $r->tpocorr,
-                    true
-                );
-                $this->dom->addChild(
-                    $regOcorrs,
-                    "localErroAviso",
-                    $r->localerroaviso,
-                    true
-                );
-                $this->dom->addChild(
-                    $regOcorrs,
-                    "codResp",
-                    $r->codresp,
-                    true
-                );
-                $this->dom->addChild(
-                    $regOcorrs,
-                    "dscResp",
-                    $r->dscresp,
-                    true
-                );
-                $ideStatus->appendChild($regOcorrs);
-            }
+
+        	foreach ($this->std->regocorrs as $r) {
+
+        		$regOcorrs = $this->dom->createElement("regOcorrs");
+        		
+        		$this->dom->addChild(
+        			$regocorrs,
+        			"tpOcorr",
+        			$r->tpocorr,
+        			true
+        		);
+
+        		$this->dom->addChild(
+        			$regocorrs,
+        			"localErroAviso",
+        			$r->localerroaviso,
+        			true
+        		);
+
+        		$this->dom->addChild(
+        			$regocorrs,
+        			"codResp",
+        			$r->codresp,
+        			true
+        		);
+
+        		$this->dom->addChild(
+        			$regocorrs,
+        			"dscResp",
+        			$r->dscresp,
+        			true
+        		);
+
+        		$ideStatus->appendChild($regOcorrs);
+
+        	}
+
         }
+
         $ideRecRetorno->appendChild($ideStatus);
+
         $this->node->appendChild($ideRecRetorno);
+
+        $inforev = $this->std->inforecev;
+
         $infoRecEv = $this->dom->createElement("infoRecEv");
+        
+        $this->dom->addChild(
+            $infoRecEv,
+            "nrProtEntr",
+            $inforev->nrprotentr,
+            true
+        );
+
         $this->dom->addChild(
             $infoRecEv,
             "dhProcess",
-            $this->std->dhprocess,
+            $inforev->dhprocess,
             true
         );
+
         $this->dom->addChild(
             $infoRecEv,
             "tpEv",
-            $this->std->tpev,
+            $inforev->tpev,
             true
         );
+
         $this->dom->addChild(
             $infoRecEv,
             "idEv",
-            $this->std->idev,
+            $inforev->idev,
             true
         );
+
         $this->dom->addChild(
             $infoRecEv,
             "hash",
-            $this->std->hash,
+            $inforev->hash,
             true
         );
+
         $this->node->appendChild($infoRecEv);
-        $infoTotal = $this->dom->createElement("infoTotal");
-        $this->dom->addChild(
-            $infoTotal,
-            "nrRecArqBase",
-            !empty($this->std->nrrecarqbase) ? $this->std->nrrecarqbase : null,
-            false
-        );
-        $this->dom->addChild(
-            $infoTotal,
-            "indExistInfo",
-            $this->std->indexistinfo,
-            true
-        );
-        $this->node->appendChild($infoTotal);
-        $infoContrib = $this->dom->createElement("infoContrib");
-        $this->dom->addChild(
-            $infoContrib,
-            "indEscrituracao",
-            $this->std->indescrituracao,
-            true
-        );
-        $this->dom->addChild(
-            $infoContrib,
-            "indDesoneracao",
-            $this->std->inddesoneracao,
-            true
-        );
-        $this->dom->addChild(
-            $infoContrib,
-            "indAcordoIsenMulta",
-            $this->std->indacordoisenmulta,
-            true
-        );
-        if (!empty($this->std->rtom)) {
-            foreach ($this->std->rtom as $r) {
-                $rTom = $this->dom->createElement("RTom");
-                $this->dom->addChild(
-                    $rTom,
-                    "cnpjPrestador",
-                    $r->cnpjprestador,
-                    true
-                );
-                $this->dom->addChild(
-                    $rTom,
-                    "vlrTotalBaseRet",
-                    number_format($r->vlrtotalbaseret, 2, ',', ''),
-                    true
-                );
-                $this->dom->addChild(
-                    $rTom,
-                    "vlrTotalRetPrinc",
-                    number_format($r->vlrtotalretprinc, 2, ',', ''),
-                    true
-                );
-                $this->dom->addChild(
-                    $rTom,
-                    "vlrTotalRetAdic",
-                    !empty($r->vlrtotalretadic) ? number_format($r->vlrtotalretadic, 2, ',', '') : null,
-                    false
-                );
-                $this->dom->addChild(
-                    $rTom,
-                    "vlrTotalNRetPrinc",
-                    !empty($r->vlrtotalnretprinc) ? number_format($r->vlrtotalnretprinc, 2, ',', '') : null,
-                    false
-                );
-                $this->dom->addChild(
-                    $rTom,
-                    "vlrTotalNRetAdic",
-                    !empty($r->vlrtotalnretadic) ? number_format($r->vlrtotalnretadic, 2, ',', '') : null,
-                    false
-                );
-                $infoContrib->appendChild($rTom);
-            }
-        }
-        if (!empty($this->std->rprest)) {
-            foreach ($this->std->rprest as $r) {
-                $rPrest = $this->dom->createElement("RPrest");
-                $this->dom->addChild(
-                    $rPrest,
-                    "tpInscTomador",
-                    $r->tpinsctomador,
-                    true
-                );
-                $this->dom->addChild(
-                    $rPrest,
-                    "nrInscTomador",
-                    $r->nrinsctomador,
-                    true
-                );
-                $this->dom->addChild(
-                    $rPrest,
-                    "vlrTotalBaseRet",
-                    number_format($r->vlrtotalbaseret, 2, ',', ''),
-                    true
-                );
-                $this->dom->addChild(
-                    $rPrest,
-                    "vlrTotalRetPrinc",
-                    number_format($r->vlrtotalretprinc, 2, ',', ''),
-                    true
-                );
-                $this->dom->addChild(
-                    $rPrest,
-                    "vlrTotalRetAdic",
-                    !empty($r->vlrtotalretadic) ? number_format($r->vlrtotalretadic, 2, ',', '') : null,
-                    false
-                );
-                $this->dom->addChild(
-                    $rPrest,
-                    "vlrTotalNRetPrinc",
-                    !empty($r->vlrtotalnretprinc) ? number_format($r->vlrtotalnretprinc, 2, ',', '') : null,
-                    false
-                );
-                $this->dom->addChild(
-                    $rPrest,
-                    "vlrTotalNRetAdic",
-                    !empty($r->vlrtotalnretadic) ? number_format($r->vlrtotalnretadic, 2, ',', '') : null,
-                    false
-                );
-                $infoContrib->appendChild($rPrest);
-            }
-        }
-        if (!empty($this->std->rrecrepad)) {
-            foreach ($this->std->rrecrepad as $r) {
-                $rRecRepAD = $this->dom->createElement("RRecRepAD");
-                $this->dom->addChild(
-                    $rRecRepAD,
-                    "cnpjAssocDesp",
-                    $r->cnpjassocdesp,
-                    true
-                );
-                $this->dom->addChild(
-                    $rRecRepAD,
-                    "vlrTotalRep",
-                    number_format($r->vlrtotalrep, 2, ',', ''),
-                    true
-                );
-                $this->dom->addChild(
-                    $rRecRepAD,
-                    "vlrTotalRet",
-                    number_format($r->vlrtotalret, 2, ',', ''),
-                    true
-                );
-                $this->dom->addChild(
-                    $rRecRepAD,
-                    "vlrTotalNRet",
-                    !empty($r->vlrtotalnret) ? number_format($r->vlrtotalnret, 2, ',', '') : null,
-                    false
-                );
-                $infoContrib->appendChild($rRecRepAD);
-            }
-        }
-        if (!empty($this->std->rcoml)) {
-            $rComl = $this->dom->createElement("RComl");
-            $r = $this->std->rcoml;
-            $this->dom->addChild(
-                $rComl,
-                "vlrCPApur",
-                number_format($r->vlrcpapur, 2, ',', ''),
-                true
-            );
-            $this->dom->addChild(
-                $rComl,
-                "vlrRatApur",
-                number_format($r->vlrratapur, 2, ',', ''),
-                true
-            );
-            $this->dom->addChild(
-                $rComl,
-                "vlrSenarApur",
-                number_format($r->vlrsenarapur, 2, ',', ''),
-                true
-            );
-            $this->dom->addChild(
-                $rComl,
-                "vlrCPSusp",
-                !empty($r->vlrcpsusp) ? number_format($r->vlrcpsusp, 2, ',', '') : null,
+
+        if (!empty($this->std->infototal)) {
+
+        	$infot = $this->std->infototal;
+
+        	$infoTotal = $this->dom->createElement("infoTotal");
+
+        	$this->dom->addChild(
+                $infoTotal,
+                "nrRecArqBase",
+                !empty($this->std->nrrecarqbase) ? $this->std->nrrecarqbase : null,
                 false
             );
+
+            $ideEstab = $this->dom->createElement("ideEstab");
+
+            $idstab = $infot->ideestab;
+
             $this->dom->addChild(
-                $rComl,
-                "vlrRatSusp",
-                !empty($r->vlrratsusp) ? number_format($r->vlrratsusp, 2, ',', '') : null,
-                false
+                $ideEstab,
+                "tpInsc",
+                $idstab->tpinsc,
+                true
             );
+
             $this->dom->addChild(
-                $rComl,
-                "vlrSenarSusp",
-                !empty($r->vlrsenarsusp) ? number_format($r->vlrsenarsusp, 2, ',', '') : null,
-                false
+                $ideEstab,
+                "nrInsc",
+                $idstab->nrinsc,
+                true
             );
-            $infoContrib->appendChild($rComl);
-        }
-        if (!empty($this->std->rcprb)) {
-            foreach ($this->std->rcprb as $r) {
-                $rCPRB = $this->dom->createElement("RCPRB");
-                $this->dom->addChild(
-                    $rCPRB,
-                    "codRec",
-                    $r->codrec,
-                    true
-                );
-                $this->dom->addChild(
-                    $rCPRB,
-                    "vlrCPApurTotal",
-                    number_format($r->vlrcpapurtotal, 2, ',', ''),
-                    true
-                );
-                $this->dom->addChild(
-                    $rCPRB,
-                    "vlrCPRBSusp",
-                    !empty($r->vlrcprbsusp) ? number_format($r->vlrcprbsusp, 2, ',', '') : null,
-                    false
-                );
-                $infoContrib->appendChild($rCPRB);
+
+            if (!empty($idstab->RTom)) {
+            	
+            	$rt = $idstab->RTom;
+                
+            	$RTom = $this->dom->createElement("RTom");
+            	
+            	$this->dom->addChild(
+            		$RTom,
+            		"cnpjPrestador",
+            		$rt->cnpjprestador,
+            		true
+            	);
+
+            	$this->dom->addChild(
+            		$RTom,
+            		"cno",
+            		!empty($rt->cno) ? $rt->cno : null,
+            		false
+            	);
+
+            	$this->dom->addChild(
+            		$RTom,
+            		"vlrTotalBaseRet",
+            		$rt->vlrtotalbaseret,
+            		true
+            	);
+
+            	if (!empty($rt->infoCRTom)) {
+
+            		foreach ($rt->infoCRTom as $infocrt) {
+            			$infoCRTom = $this->dom->createElement("infoCRTom");
+
+            			$this->dom->addChild(
+            				$infoCRTom,
+            				"CRTom",
+            				$infocrt->crtom,
+            				true           				
+            			);
+
+            			$this->dom->addChild(
+            				$infoCRTom,
+            				"vlrCRTom",
+            				!empty($infocrt->vlrcrtom) ? number_format($infocrt->vlrcrtom, 2, ',', '') : null,
+            				false
+            			);
+
+            			$this->dom->addChild(
+            				$infoCRTom,
+            				"vlrCRTomSusp",
+            				!empty($infocrt->vlrcrtomsusp) ? number_format($infocrt->vlrcrtomsusp, 2, ',', '') : null,
+            				false
+            			)
+            		}
+
+            	}
+
+            	$ideEstab->appendChild($RTom);
+
             }
+
+            if (!empty($infot->rprest)) {
+
+            	$rpres = $infot->rprest;
+
+            	$RPrest = $this->dom->createElement("RPrest");
+
+            	$this->dom->addChild(
+            		$RPrest,
+            		"tpInscTomador",
+            		$rpres->tpinsctomador,
+            		true
+
+            	);
+
+            	$this->dom->addChild(
+            		$RPrest,
+            		"nrInscTomador",
+            		$rpres->nrinsctomador,
+            		true
+            	);
+
+            	$this->dom->addChild(
+            		$RPrest,
+            		"vlrTotalBaseRet",
+            		number_format($rpres->vlrtotalbaseret, 2, ',', ''),
+            		true
+            	);
+
+            	$this->dom->addChild(
+            		$RPrest,
+            		"vlrTotalRetPrinc",
+            		number_format($rpres->vlrtotalretprinc, 2, ',', ''),
+            		true
+            	);
+
+            	$this->dom->addChild(
+            		$RPrest,
+            		"vlrTotalRetAdic",
+            		!empty($rpres->vlrtotalretadic) ? number_format($rpres->vlrtotalretadic, 2, ',', '') : null,
+            		false
+            	);
+
+            	$this->dom->addChild(
+            		$RPrest,
+            		"vlrTotalNRetPrinc",
+            		!empty($rpres->vlrtotalnretprinc) ? number_format($rpres->vlrtotalnretprinc, 2, ',', '') : null,
+            		false
+            	);
+
+            	$this->dom->addChild(
+            		$RPrest,
+            		"vlrTotalNRetAdic",
+            		!empty($rpres->vlrtotalnretadic) ? number_format($rpres->vlrtotalnretadic, 2, ',', '') : null,
+            		false
+            	);
+
+            	$ideEstab->appendChild($RPrest);
+
+            }
+
+            if (!empty($infot->rrecrepad)) {
+
+            	foreach ($infot->rrecrepad as $inforrecrep) {
+            		
+            		$RRecRepAD = $this->dom->createElement("RRecRepAD");
+
+            		$this->dom->addChild(
+            			$RRecRepAD,
+            			"cnpjAssocDesp",
+            			$inforrecrep->cnpjassocdesp,
+            			true
+            		);
+
+            		$this->dom->addChild(
+            	    	$RRecRepAD,
+            	    	"vlrTotalRep",
+            	    	number_format($inforrecrep->vlrtotalrep, 2, ',', ''),
+            	    	true
+            	    );
+
+            	    $this->dom->addChild(
+            			$RRecRepAD,
+            			"CRRecRepAD",
+            			$inforrecrep->crrecrepad,
+            			true
+            		);
+
+            		$this->dom->addChild(
+            	    	$RRecRepAD,
+            	    	"vlrCRRecRepAD",
+            	    	number_format($inforrecrep->vlrcrrecrepad, 2, ',', ''),
+            	    	true
+            	    );
+
+            	    $this->dom->addChild(
+            	    	$RRecRepAD,
+            	    	"vlrCRRecRepADSusp",
+            	    	!empty($inforrecrep->vlrcrrecrepadsusp) ? number_format($inforrecrep->vlrcrrecrepadsusp, 2, ',', '') : null,
+            	    	false
+            	    );
+
+            	    $ideEstab->appendChild($RRecRepAD);
+
+            	}
+
+            }
+
+            if (!empty($infot->rcoml)) {
+
+            	foreach ($infot->rcoml as $inforcoml) {
+
+            		$RComl = $this->dom->createElement("RComl");
+
+            		$this->dom->addChild(
+            			$RComl,
+            			"CRComl",
+            			$inforcoml->crcoml,
+            			true
+            		);
+
+            		$this->dom->addChild(
+            			$RComl,
+            			"vlrCRComl",
+            			number_format($inforcoml->vlrcrcoml, 2, ',', ''),
+            			true
+            		);
+
+            		$this->dom->addChild(
+            			$RComl,
+            			"vlrCRComlSusp",
+            			!empty($inforcoml->vlrcrcomlsusp) ? $inforcoml->vlrcrcomlsusp : null,
+            			false
+            		);
+
+            		$ideEstab->appendChild($RComl);
+
+            	}
+
+            }
+
+            if (!empty($infot->rcprb)) {
+
+            	foreach ($infot->rcprb as $inforcp) {
+
+            		$RCPRB = $this->dom->createElement("RCPRB");
+
+            		$this->dom->addChild(
+            			$RCPRB,
+            			"CRCPRB",
+            			$inforcp->crcprb,
+            			true
+            		);
+
+            		$this->dom->addChild(
+            			$RCPRB,
+            			"vlrCRCPRB",
+            			!empty($inforcp->vlrcrcprb) ? number_format($inforcp->vlrcrcprb, 2, ',', '') : null,
+            			false
+            		);
+
+            		$this->dom->addChild(
+            			$RCPRB,
+            			"vlrCRCPRBSusp",
+            			!empty($inforcp->vlrcrcprbsusp) ? number_format($inforcp->vlrcrcprbsusp, 2, ',', '') : null,
+            			false
+            		);
+
+            		$ideEstab->appendChild($RCPRB);
+
+            	}
+
+            }
+
+            if (!empty($infot->RRecEspetDesp)) {
+
+            	$inforreced = $infot->RRecEspetDesp;
+
+            	$RRecEspetDesp = $this->dom->createElement("RRecEspetDesp");
+
+            	$this->dom->addChild(
+            		$RRecEspetDesp,
+            		"CRRecEspetDesp",
+            		$inforreced->crrecespetdesp,
+            		true
+            	);
+
+            	$this->dom->addChild(
+            		$RRecEspetDesp,
+            		"vlrReceitaTotal",
+            		number_format($inforreced->vlrreceitatotal, 2, ',', ''),
+            		true
+            	);
+
+            	$this->dom->addChild(
+            		$RRecEspetDesp,
+            		"vlrCRRecEspetDesp",
+            		number_format($inforreced->vlrcrrecespetdesp, 2, ',', ''),
+            		true
+            	);
+
+            	$this->dom->addChild(
+            		$RRecEspetDesp,
+            		"vlrCRRecEspetDespSusp",
+            		!empty($inforreced->vlrcrrecespetdespsusp) ? number_format($inforreced->vlrcrrecespetdespsusp, 2, ',', '') : null,
+            		false
+            	);
+
+            	$ideEstab->appendChild($RCPRB);
+            	
+            }
+
+            $infoTotal->appendChild($ideEstab);
+
+            $this->node->appendChild($infoTotal);
+
+
         }
-        $this->node->appendChild($infoContrib);
-        
-        $this->reinf->appendChild($this->node);
-        //$this->xml = $this->dom->saveXML($this->reinf);
-        $this->sign($this->evtTag);
-    }
+
 }
+
+?>

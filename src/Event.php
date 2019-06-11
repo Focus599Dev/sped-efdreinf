@@ -36,8 +36,16 @@ class Event
         'evtreabreevper' => Factories\EvtReabreEvPer::class,
         'evtfechaevper' => Factories\EvtFechaEvPer::class,
         'evtespdesportivo' => Factories\EvtEspDesportivo::class,
-        'evttotal' => Factories\EvtTotal::class,
-        'evtexclusao' => Factories\EvtExclusao::class
+        'evtretpf' => Factories\EvtRetPF::class,
+        'evtretpj' => Factories\EvtRetPJ::class,
+        'evtbenefnid' => Factories\EvtBenefNId::class,
+        'evtreab' => Factories\EvtReab::class,
+        'evtfech' => Factories\EvtFech::class,
+        'evtexclusao' => Factories\EvtExclusao::class,
+        'evttotal' => Factories\EvtExclusao::class,
+        'evtret' => Factories\EvtRet::class,
+        'evttotalcontrib' => Factories\EvtTotalContrib::class,
+        'evtretcons' => Factories\EvtRetCons::class
     ];
     
     /**
@@ -57,8 +65,16 @@ class Event
         'r2098' => 'evteeabreevper',
         'r2099' => 'evtfecharvper',
         'r3010' => 'evtespdesportivo',
-        'r5001' => 'evttotal',
-        'r9000' => 'evtexclusao'
+        'r4010' => 'evtretpf',
+        'r4020' => 'evtretpj',
+        'r4040' => 'evtbenefnid',
+        'r4098' => 'evtreab',
+        'r4099' => 'evtfech',
+        'r9000' => 'evtexclusao',
+        'r9001' => 'evttotal',
+        'r9002' => 'evtret',
+        'r9011' => 'evttotalcontrib',
+        'r9012' => 'evtretcons'
     ];
     
     /**

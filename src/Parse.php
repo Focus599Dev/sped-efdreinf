@@ -36,8 +36,16 @@ class Parse{
         'evtreabreevper' => Parses\EvtReabreEvPer::class,
         'evtfechaevper' => Parses\EvtFechaEvPer::class,
         'evtespdesportivo' => Parses\EvtEspDesportivo::class,
+        'evtretpf' => Parses\EvtRetPF::class,
+        'evtretpj' => Parses\EvtRetPJ::class,
+        'evtbenefnid' => Parses\EvtBenefNId::class,
+        'evtreab' => Parses\EvtReab::class,
+        'evtfech' => Parses\EvtFech::class,
+        'evtexclusao' => Parses\EvtExclusao::class,
         'evttotal' => Parses\EvtTotal::class,
-        'evtexclusao' => Parses\EvtExclusao::class
+        'evtret' => Parses\EvtRet::class,
+        'evttotalcontrib' => Parses\EvtTotalContrib::class,
+        'evtretcons' =>Parses\EvtRetCons::class
     ];
     
     /**
@@ -57,8 +65,16 @@ class Parse{
         'r2098' => 'evteeabreevper',
         'r2099' => 'evtfecharvper',
         'r3010' => 'evtespdesportivo',
-        'r5001' => 'evttotal',
-        'r9000' => 'evtexclusao'
+        'r4010' => 'evtretpf',
+        'r4020' => 'evtretpj',
+        'r4040' => 'evtbenefnid',
+        'r4098' => 'evtreab',
+        'r4099' => 'evtfech',
+        'r9000' => 'evtexclusao',
+        'r9001' => 'evttotal',
+        'r9002' => 'evtret',
+        'r9011' => 'evttotalcontrib',
+        'r9012' => 'evtretcons'
     ];
 
     /**
