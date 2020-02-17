@@ -30,7 +30,7 @@ class Tools extends ToolsBase
     /**
      * @var NFePHP\Common\Soap\SoapInterface
      */
-    protected $soap;
+    public $soap;
     protected $soapnamespaces = [
         'xmlns:soapenv' => "http://schemas.xmlsoap.org/soap/envelope/",
         'xmlns:sped' => "http://sped.fazenda.gov.br/",
@@ -244,7 +244,7 @@ class Tools extends ToolsBase
         return $xml;
     }
 
-    protected function checkSoap(){
+    public function checkSoap(){
         if (empty($this->soap)) {
             $this->soap = new SoapCurl($this->certificate);
         }
