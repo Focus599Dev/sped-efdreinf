@@ -85,6 +85,8 @@ class EvtFechaEvPer extends Parse {
                 $this->obParsed->evtpgtos = $auxOb[7];
 
                 $this->obParsed->compsemmovto = $auxOb[8];
+                
+                $this->obParsed->evtaquis = $auxOb[9];
 
             }
 

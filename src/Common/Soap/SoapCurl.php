@@ -83,7 +83,7 @@ class SoapCurl extends SoapBase implements SoapInterface
             curl_setopt($oCurl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
             curl_setopt($oCurl, CURLOPT_CONNECTTIMEOUT, $this->soaptimeout);
             curl_setopt($oCurl, CURLOPT_TIMEOUT, $this->soaptimeout + 20);
-            curl_setopt($oCurl, CURLOPT_HEADER, 1);
+            curl_setopt($oCurl, CURLOPT_HEADER, 0);
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, 0);
 
@@ -123,8 +123,11 @@ class SoapCurl extends SoapBase implements SoapInterface
             $httpcode = curl_getinfo($oCurl, CURLINFO_HTTP_CODE);
 
             curl_close($oCurl);
+
             $this->responseHead = trim(substr($response, 0, $headsize));
-            $this->responseBody = trim(substr($response, $headsize));
+            
+            $this->responseBody = $this->removeStuffs($response, $operation);
+
             $this->saveDebugFiles(
                 $operation,
                 $this->requestHead . "\n" . $this->requestBody,
@@ -157,5 +160,26 @@ class SoapCurl extends SoapBase implements SoapInterface
                 curl_setopt($oCurl, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
             }
         }
+    }
+
+    private function removeStuffs($xml, $method){     
+
+        $tag = $method . 'Response';
+
+        $strpos = strpos($xml, '<' . $tag);
+
+        if ($strpos != false){
+
+            $xml = substr($xml, $strpos);
+        }
+
+        $strpos = strpos($xml, '</' . $tag . '>');
+
+        if ($strpos != false){
+
+            $xml = substr($xml, 0 , $strpos + strlen('</' . $tag . '>'));
+        }
+        
+        return $xml;
     }
 }
