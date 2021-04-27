@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.reinf.esocial.gov.br/schemas/evt2055AquisicaoProdRural/v1_05_00" targetNamespace="http://www.reinf.esocial.gov.br/schemas/evt2055AquisicaoProdRural/v1_05_00" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.reinf.esocial.gov.br/schemas/evt2055AquisicaoProdRural/v1_05_01" targetNamespace="http://www.reinf.esocial.gov.br/schemas/evt2055AquisicaoProdRural/v1_05_01" elementFormDefault="qualified" attributeFormDefault="unqualified">
   <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="./xmldsig-core-schema.xsd"/>
   <xs:element name="Reinf">
     <xs:annotation>
@@ -197,117 +197,35 @@
                                     </xs:restriction>
                                   </xs:simpleType>
                                 </xs:element>
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
-                          <xs:element name="detAquis" minOccurs="1" maxOccurs="6">
-                            <xs:annotation>
-                              <xs:documentation>Detalhamento da aquisição de produção rural</xs:documentation>
-                            </xs:annotation>
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element name="indAquis" minOccurs="1" maxOccurs="1">
-                                  <xs:simpleType>
-                                    <xs:annotation>
-                                      <xs:documentation>
-										  Indicativo da Aquisição:
-										  1 - Aquisição da produção de produtor rural pessoa física ou segurado especial em geral;
-										  2 - Aquisição da produção de produtor rural pessoa física ou segurado especial em geral por Entidade do PAA;
-										  3 - Aquisição da produção de produtor rural pessoa jurídica por Entidade do PAA;
-										  4 - Aquisição da produção de produtor rural pessoa física ou segurado especial em geral - Produção Isenta (Lei 13.606/2018);
-										  5 - Aquisição da produção de produtor rural pessoa física ou segurado especial em geral por Entidade do PAA - Produção Isenta (Lei 13.606/2018);
-										  6 - Aquisição da produção de produtor rural pessoa jurídica por Entidade do PAA - Produção Isenta (Lei 13.606/2018).
-										  7 - Aquisição de produção de produtor rural pessoa física ou segurado especial para fins de exportação.
-									  </xs:documentation>
-                                    </xs:annotation>
-                                    <xs:restriction base="xs:unsignedByte">
-                                      <xs:pattern value="[1-7]"/>
-                                    </xs:restriction>
-                                  </xs:simpleType>
-                                </xs:element>
-                                <xs:element name="vlrBruto" minOccurs="1" maxOccurs="1">
-                                  <xs:simpleType>
-                                    <xs:annotation>
-                                      <xs:documentation>Informar o valor bruto da aquisição da produção rural.</xs:documentation>
-                                    </xs:annotation>
-                                    <xs:restriction base="xs:string">
-                                      <xs:minLength value="4"/>
-                                      <xs:maxLength value="15" />
-                                      <xs:pattern value="[0-9]{1,12}[,][0-9]{2}"/>
-                                    </xs:restriction>
-                                  </xs:simpleType>
-                                </xs:element>
-                                <xs:element name="vlrCPDescPR" minOccurs="1" maxOccurs="1">
-                                  <xs:simpleType>
-                                    <xs:annotation>
-                                      <xs:documentation>Preencher com o valor da Contribuição Previdenciária descontada pelo adquirente de produção de produtor rural pessoa física - sub-rogação.</xs:documentation>
-                                    </xs:annotation>
-                                    <xs:restriction base="xs:string">
-                                      <xs:minLength value="4"/>
-                                      <xs:maxLength value="15" />
-                                      <xs:pattern value="[0-9]{1,12}[,][0-9]{2}"/>
-                                    </xs:restriction>
-                                  </xs:simpleType>
-                                </xs:element>
-                                <xs:element name="vlrRatDescPR" minOccurs="1" maxOccurs="1">
-                                  <xs:simpleType>
-                                    <xs:annotation>
-                                      <xs:documentation>Valor da contribuição destinada ao financiamento dos benefícios concedidos em razão do grau de incidência da incapacidade laborativa decorrente dos riscos ambientais do trabalho, incidente sobre a aquisição de produção rural de produtor rural.</xs:documentation>
-                                    </xs:annotation>
-                                    <xs:restriction base="xs:string">
-                                      <xs:minLength value="4"/>
-                                      <xs:maxLength value="15" />
-                                      <xs:pattern value="[0-9]{1,12}[,][0-9]{2}"/>
-                                    </xs:restriction>
-                                  </xs:simpleType>
-                                </xs:element>
-                                <xs:element name="vlrSenarDesc" minOccurs="1" maxOccurs="1">
-                                  <xs:simpleType>
-                                    <xs:annotation>
-                                      <xs:documentation>Valor da contribuição destinada ao Senar, incidente sobre a aquisição de produção rural de produtor rural pessoa física/segurado especial.</xs:documentation>
-                                    </xs:annotation>
-                                    <xs:restriction base="xs:string">
-                                      <xs:minLength value="4"/>
-                                      <xs:maxLength value="15" />
-                                      <xs:pattern value="[0-9]{1,12}[,][0-9]{2}"/>
-                                    </xs:restriction>
-                                  </xs:simpleType>
-                                </xs:element>
-                                <xs:element name="infoProcJud" minOccurs="0" maxOccurs="50">
+                                <xs:element name="detAquis" minOccurs="1" maxOccurs="6">
                                   <xs:annotation>
-                                    <xs:documentation>Registro preenchido quando o Produtor Rural (pessoa física ou segurado especial), identificado em {ideProdutor} possua processo judicial (tipo 2) com decisão/sentença determinando a não retenção pelo adquirente, das contribuições incidentes sobre a aquisição de produção.</xs:documentation>
+                                    <xs:documentation>Detalhamento da aquisição de produção rural</xs:documentation>
                                   </xs:annotation>
                                   <xs:complexType>
                                     <xs:sequence>
-                                      <xs:element name="nrProcJud" minOccurs="1" maxOccurs="1">
-                                        <xs:simpleType>
-                                          <xs:annotation>
-                                            <xs:documentation>Informar o número do processo judicial. Informar o tipo do processo como sendo 2, judicial.</xs:documentation>
-                                          </xs:annotation>
-                                          <xs:restriction base="xs:string">
-                                            <xs:minLength value="1"/>
-                                            <xs:maxLength value="21"/>
-                                            <xs:pattern value="[0-9]{1,21}"/>
-                                          </xs:restriction>
-                                        </xs:simpleType>
-                                      </xs:element>
-                                      <xs:element name="codSusp" minOccurs="0" maxOccurs="1">
+                                      <xs:element name="indAquis" minOccurs="1" maxOccurs="1">
                                         <xs:simpleType>
                                           <xs:annotation>
                                             <xs:documentation>
-                                              Código do Indicativo da Suspensão, atribuído pelo contribuinte. Este campo deve ser utilizado se, num mesmo processo,
-                                              houver mais de uma matéria tributária objeto de contestação e as decisões forem diferentes para cada uma.
+                                              Indicativo da Aquisição:
+                                              1 - Aquisição da produção de produtor rural pessoa física ou segurado especial em geral;
+                                              2 - Aquisição da produção de produtor rural pessoa física ou segurado especial em geral por Entidade do PAA;
+                                              3 - Aquisição da produção de produtor rural pessoa jurídica por Entidade do PAA;
+                                              4 - Aquisição da produção de produtor rural pessoa física ou segurado especial em geral - Produção Isenta (Lei 13.606/2018);
+                                              5 - Aquisição da produção de produtor rural pessoa física ou segurado especial em geral por Entidade do PAA - Produção Isenta (Lei 13.606/2018);
+                                              6 - Aquisição da produção de produtor rural pessoa jurídica por Entidade do PAA - Produção Isenta (Lei 13.606/2018).
+                                              7 - Aquisição de produção de produtor rural pessoa física ou segurado especial para fins de exportação.
                                             </xs:documentation>
                                           </xs:annotation>
-                                          <xs:restriction base="xs:string">
-                                            <xs:pattern value="[0-9]{0,14}"/>
+                                          <xs:restriction base="xs:unsignedByte">
+                                            <xs:pattern value="[1-7]"/>
                                           </xs:restriction>
                                         </xs:simpleType>
                                       </xs:element>
-                                      <xs:element name="vlrCPNRet" minOccurs="0" maxOccurs="1">
+                                      <xs:element name="vlrBruto" minOccurs="1" maxOccurs="1">
                                         <xs:simpleType>
                                           <xs:annotation>
-                                            <xs:documentation>Valor da Contribuição Previdenciária que deixou de ser retida pelo declarante em decorrência de decisão/sentença judicial.</xs:documentation>
+                                            <xs:documentation>Informar o valor bruto da aquisição da produção rural.</xs:documentation>
                                           </xs:annotation>
                                           <xs:restriction base="xs:string">
                                             <xs:minLength value="4"/>
@@ -316,10 +234,10 @@
                                           </xs:restriction>
                                         </xs:simpleType>
                                       </xs:element>
-                                      <xs:element name="vlrRatNRet" minOccurs="0" maxOccurs="1">
+                                      <xs:element name="vlrCPDescPR" minOccurs="1" maxOccurs="1">
                                         <xs:simpleType>
                                           <xs:annotation>
-                                            <xs:documentation>Valor da GILRAT, incidente sobre a aquisição de produção rural de produtor rural, cuja retenção deixou de ser efetuada em decorrência de decisão/sentença judicial.</xs:documentation>
+                                            <xs:documentation>Preencher com o valor da Contribuição Previdenciária descontada pelo adquirente de produção de produtor rural pessoa física - sub-rogação.</xs:documentation>
                                           </xs:annotation>
                                           <xs:restriction base="xs:string">
                                             <xs:minLength value="4"/>
@@ -328,10 +246,10 @@
                                           </xs:restriction>
                                         </xs:simpleType>
                                       </xs:element>
-                                      <xs:element name="vlrSenarNRet" minOccurs="0" maxOccurs="1">
+                                      <xs:element name="vlrRatDescPR" minOccurs="1" maxOccurs="1">
                                         <xs:simpleType>
                                           <xs:annotation>
-                                            <xs:documentation>Valor da contribuição destinada ao SENAR, incidente sobre a aquisição de produção rural de produtor rural pessoa física/segurado especial, e que deixou de ser retida em decorrência de decisão/sentença judicial.</xs:documentation>
+                                            <xs:documentation>Valor da contribuição destinada ao financiamento dos benefícios concedidos em razão do grau de incidência da incapacidade laborativa decorrente dos riscos ambientais do trabalho, incidente sobre a aquisição de produção rural de produtor rural.</xs:documentation>
                                           </xs:annotation>
                                           <xs:restriction base="xs:string">
                                             <xs:minLength value="4"/>
@@ -339,6 +257,88 @@
                                             <xs:pattern value="[0-9]{1,12}[,][0-9]{2}"/>
                                           </xs:restriction>
                                         </xs:simpleType>
+                                      </xs:element>
+                                      <xs:element name="vlrSenarDesc" minOccurs="1" maxOccurs="1">
+                                        <xs:simpleType>
+                                          <xs:annotation>
+                                            <xs:documentation>Valor da contribuição destinada ao Senar, incidente sobre a aquisição de produção rural de produtor rural pessoa física/segurado especial.</xs:documentation>
+                                          </xs:annotation>
+                                          <xs:restriction base="xs:string">
+                                            <xs:minLength value="4"/>
+                                            <xs:maxLength value="15" />
+                                            <xs:pattern value="[0-9]{1,12}[,][0-9]{2}"/>
+                                          </xs:restriction>
+                                        </xs:simpleType>
+                                      </xs:element>
+                                      <xs:element name="infoProcJud" minOccurs="0" maxOccurs="50">
+                                        <xs:annotation>
+                                          <xs:documentation>Registro preenchido quando o Produtor Rural (pessoa física ou segurado especial), identificado em {ideProdutor} possua processo judicial (tipo 2) com decisão/sentença determinando a não retenção pelo adquirente, das contribuições incidentes sobre a aquisição de produção.</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="nrProcJud" minOccurs="1" maxOccurs="1">
+                                              <xs:simpleType>
+                                                <xs:annotation>
+                                                  <xs:documentation>Informar o número do processo judicial. Informar o tipo do processo como sendo 2, judicial.</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:restriction base="xs:string">
+                                                  <xs:minLength value="1"/>
+                                                  <xs:maxLength value="21"/>
+                                                  <xs:pattern value="[0-9]{1,21}"/>
+                                                </xs:restriction>
+                                              </xs:simpleType>
+                                            </xs:element>
+                                            <xs:element name="codSusp" minOccurs="0" maxOccurs="1">
+                                              <xs:simpleType>
+                                                <xs:annotation>
+                                                  <xs:documentation>
+                                                    Código do Indicativo da Suspensão, atribuído pelo contribuinte. Este campo deve ser utilizado se, num mesmo processo,
+                                                    houver mais de uma matéria tributária objeto de contestação e as decisões forem diferentes para cada uma.
+                                                  </xs:documentation>
+                                                </xs:annotation>
+                                                <xs:restriction base="xs:string">
+                                                  <xs:pattern value="[0-9]{0,14}"/>
+                                                </xs:restriction>
+                                              </xs:simpleType>
+                                            </xs:element>
+                                            <xs:element name="vlrCPNRet" minOccurs="0" maxOccurs="1">
+                                              <xs:simpleType>
+                                                <xs:annotation>
+                                                  <xs:documentation>Valor da Contribuição Previdenciária que deixou de ser retida pelo declarante em decorrência de decisão/sentença judicial.</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:restriction base="xs:string">
+                                                  <xs:minLength value="4"/>
+                                                  <xs:maxLength value="15" />
+                                                  <xs:pattern value="[0-9]{1,12}[,][0-9]{2}"/>
+                                                </xs:restriction>
+                                              </xs:simpleType>
+                                            </xs:element>
+                                            <xs:element name="vlrRatNRet" minOccurs="0" maxOccurs="1">
+                                              <xs:simpleType>
+                                                <xs:annotation>
+                                                  <xs:documentation>Valor da GILRAT, incidente sobre a aquisição de produção rural de produtor rural, cuja retenção deixou de ser efetuada em decorrência de decisão/sentença judicial.</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:restriction base="xs:string">
+                                                  <xs:minLength value="4"/>
+                                                  <xs:maxLength value="15" />
+                                                  <xs:pattern value="[0-9]{1,12}[,][0-9]{2}"/>
+                                                </xs:restriction>
+                                              </xs:simpleType>
+                                            </xs:element>
+                                            <xs:element name="vlrSenarNRet" minOccurs="0" maxOccurs="1">
+                                              <xs:simpleType>
+                                                <xs:annotation>
+                                                  <xs:documentation>Valor da contribuição destinada ao SENAR, incidente sobre a aquisição de produção rural de produtor rural pessoa física/segurado especial, e que deixou de ser retida em decorrência de decisão/sentença judicial.</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:restriction base="xs:string">
+                                                  <xs:minLength value="4"/>
+                                                  <xs:maxLength value="15" />
+                                                  <xs:pattern value="[0-9]{1,12}[,][0-9]{2}"/>
+                                                </xs:restriction>
+                                              </xs:simpleType>
+                                            </xs:element>
+                                          </xs:sequence>
+                                        </xs:complexType>
                                       </xs:element>
                                     </xs:sequence>
                                   </xs:complexType>
