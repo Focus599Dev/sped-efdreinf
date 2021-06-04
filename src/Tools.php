@@ -85,17 +85,17 @@ class Tools extends ToolsBase
      */
     public function consultar($recibofechamento)
     {
-        if (empty($recibofechamento)) {
+         if (empty($recibofechamento)) {
             return '';
         }
-        $this->method = "ConsultaInformacoesConsolidadas";
+        $this->method = "ConsultaResultadoFechamento2099";
         $this->action = "http://sped.fazenda.gov.br/ConsultasReinf/".$this->method;
         $request = "<sped:tipoInscricaoContribuinte>$this->tpInsc</sped:tipoInscricaoContribuinte>";
         $request .= "<sped:numeroInscricaoContribuinte>$this->nrInsc</sped:numeroInscricaoContribuinte>";
         $request .= "<sped:numeroProtocoloFechamento>$recibofechamento</sped:numeroProtocoloFechamento>";
-        $body = "<sped:ConsultaInformacoesConsolidadas>"
+        $body = "<sped:ConsultaResultadoFechamento2099>"
             . $request
-            . "</sped:ConsultaInformacoesConsolidadas>";
+            . "</sped:ConsultaResultadoFechamento2099>";
         
         $this->lastResponse = $this->sendRequest($body);
         return $this->lastResponse;
