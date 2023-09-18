@@ -16,51 +16,55 @@ class EvtBenefNId extends Parse{
 
 		$this->obParsed->config = new stdClass();
 
-		$this->obParsed->config->eventoVersion = $this->eventoVersion;
-
-		$this->obParsed->config->serviceVersion = $this->serviceVersion;
-
 		$this->obParsed->modo = $this->ob[0][1];
     	
     	$this->obParsed->idEvento = $this->ob[0][3];
+		
+        $this->obParsed->nrrecibo = $this->ob[1][0];
 
-		$this->obParsed->config->empregador = new stdClass();
+    	$this->obParsed->config->tpAmb = $this->ob[1][1];
+    	
+    	$this->obParsed->config->verProc = $this->ob[1][3];
 
-		$this->obParsed->config->transmissor = $this->obParsed->config->empregador;
+    	$this->obParsed->config->eventoVersion = $this->eventoVersion;
+        
+        $this->obParsed->config->serviceVersion = $this->serviceVersion;
+    	
+    	$this->obParsed->config->empregador = new stdClass();
+    	
+    	$this->obParsed->config->empregador->tpInsc = $this->ob[1][4];
 
-    	$this->obParsed->ideEvento = new stdClass();
+    	$this->obParsed->config->empregador->nrInsc = $this->ob[1][5];
 
-    	$this->obParsed->ideEvento->indretif = $this->ob[1][1];
+    	$this->obParsed->config->transmissor = $this->obParsed->config->empregador;
 
-    	$this->obParsed->ideEvento->nrrecibo = $this->ob[1][2];
+        $this->obParsed->config->empregador->nmRazao = $this->ob[1][6];
 
-		$this->obParsed->ideEvento->perApur = $this->ob[1][3];
+        $this->obParsed->indretif = $this->ob[1][8];
 
-		$this->obParsed->config->empregador->ideEvento->nmRazao = $this->ob[1][4];
-
-		$this->obParsed->config->ideEvento->tpAmb = $this->ob[1][5];
-
-		$this->obParsed->config->ideEvento->procEmi = $this->ob[1][6];
-
-		$this->obParsed->config->ideEvento->verProc = $this->ob [1][7];
-
-		$this->obParsed->ideContri = new stdClass();
-
-		$this->obParsed->ideContri->empregador->tpInsc = $this->ob[1][8];
-
-		$this->obParsed->ideContri->empregador->nrInsc = $this->ob[1][9];
+        $this->obParsed->perapur = $this->ob[1][7];
 
 		$this->obParsed->ideEstab = new stdClass();
 
-		$this->obParsed->ideEstab->tpInscEstab = $this->ob[1][10];
+		$this->obParsed->ideEstab->tpInscEstab = $this->ob[1][9];
 
-		$this->obParsed->ideEstab->nrInscEstab = $this->ob[1][11];
+		$this->obParsed->ideEstab->nrInscEstab = $this->ob[1][10];
+		
+		$this->obParsed->ideEstab->natJur = $this->ob[1][11];
 
 		$index = 2;
 
-        $lastIdeEstab = null;
+		$lastInfoPgto = null;
 
-        $this->obParsed->ideestab = array();
+		$lastIdeNat = null;
+
+		$lastInfoProcJud = null;
+
+		$lastDespProcJud = null;
+
+		$lastIdePgto = null;
+
+		$lastideOpSaude = null;
 
         for ($i = $index; $i < count($this->ob); $i++){
             
@@ -72,19 +76,19 @@ class EvtBenefNId extends Parse{
 
                 $aux = new stdClass();
 
-                $aux->natRendim =  $auxOb[1];
+                $aux->natRend =  $auxOb[1];
 
                 $this->obParsed->ideestab[] = $aux;
 
-                $lastIdeEstab =  $aux;
+                $lastIdeNat =  $aux;
 
             } else if ($cabecario == 'INFOPGTO'){
 
             	$aux = new stdClass();
 
-            	if (!isset($lastIdeEstab->infopgto)){
+            	if (!isset($lastIdeNat->infoPgto)){
 
-            		$lastIdeEstab->infopgto = array();
+            		$lastIdeNat->infoPgto = array();
 
             	}
 
@@ -92,13 +96,41 @@ class EvtBenefNId extends Parse{
 
             	$aux->vlrLiq = $auxOb[2];
 
-            	$aux->vlrReaj = $auxOb[3];
+            	$aux->vlrBaseIR = $auxOb[3];
 
             	$aux->vlrIR = $auxOb[4];
 
-            	$aux->descr = $auxOb[5];
+            	$aux->dtEscrCont = $auxOb[5];
 
-            	$lastIdeEstab->infopgto[] = $aux;
+            	$aux->descr = $auxOb[6];
+
+            	$lastIdeNat->infoPgto[] = $aux;
+
+            	$lastInfoPgto = $aux;
+
+            } else if ($cabecario == 'INFOPROCRET'){
+
+            	$aux = new stdClass();
+
+            	if (!isset($lastInfoPgto->infoProcRet)){
+
+            		$lastInfoPgto->infoProcRet = array();
+
+            	}
+
+            	$aux->tpProcRet = $auxOb[1];
+
+            	$aux->nrProcRet = $auxOb[2];
+
+            	$aux->codSusp = $auxOb[3];
+
+            	$aux->vlrBaseSuspIR = $auxOb[4];
+
+            	$aux->vlrNIR = $auxOb[5];
+
+            	$aux->vlrDepIR = $auxOb[6];
+
+            	$lastInfoPgto->infoProcRet[] = $aux;
 
             	$lastInfoPgto = $aux;
 

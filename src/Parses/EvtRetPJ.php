@@ -16,45 +16,41 @@ class EvtRetPJ extends Parse{
 
 		$this->obParsed->config = new stdClass();
 
-		$this->obParsed->config->eventoVersion = $this->eventoVersion;
-
-		$this->obParsed->config->serviceVersion = $this->serviceVersion;
-
 		$this->obParsed->modo = $this->ob[0][1];
+    	
+    	$this->obParsed->idEvento = $this->ob[0][3];
+		
+        $this->obParsed->nrrecibo = $this->ob[1][0];
 
-		$this->obParsed->idEvento = $this->ob[0][3];
+    	$this->obParsed->config->tpAmb = $this->ob[1][1];
+    	
+    	$this->obParsed->config->verProc = $this->ob[1][3];
 
-		$this->obParsed->ideEvento = new stdClass();
+    	$this->obParsed->config->eventoVersion = $this->eventoVersion;
+        
+        $this->obParsed->config->serviceVersion = $this->serviceVersion;
+    	
+    	$this->obParsed->config->empregador = new stdClass();
+    	
+    	$this->obParsed->config->empregador->tpInsc = $this->ob[1][4];
 
-		$this->obParsed->ideEvento->indRetif = $this->ob[1][1];
+    	$this->obParsed->config->empregador->nrInsc = $this->ob[1][5];
 
-		$this->obParsed->ideEvento->nrRecibo = $this->ob[1][2];
+    	$this->obParsed->config->transmissor = $this->obParsed->config->empregador;
 
-		$this->obParsed->ideEvento->perApur = $this->ob[1][3];
+        $this->obParsed->config->empregador->nmRazao = $this->ob[1][6];
 
-		$this->obParsed->config->transmissor = $this->obParsed->config->empregador;
+        $this->obParsed->indretif = $this->ob[1][8];
 
-		$this->obParsed->config->ideEvento->empregador->nmRazao = $this->ob[1][4];
-
-		$this->obParsed->config->ideEvento->tpAmb = $this->ob[1][5];
-
-		$this->obParsed->config->ideEvento->procEmi = $this->ob[1][6];
-
-		$this->obParsed->config->ideEvento->verProc = $this->ob[1][7];
-
-		$this->obParsed->config->empregador = new stdClass();
-
-		$this->obParsed->ideContri = new stdClass();
-
-		$this->obParsed->config->empregador->ideContri->tpInsc = $this->ob[1][8];
-
-		$this->obParsed->config->empregador->ideContri->nrInsc = $this->ob[1][9];
+        $this->obParsed->perapur = $this->ob[1][7];
 
 		$this->obParsed->ideEstab = new stdClass();
 
-		$this->obParsed->ideEstab->tpInscEstab = $this->ob[1][10];
+		$this->obParsed->ideEstab->tpInscEstab = $this->ob[1][9];
 
-		$this->obParsed->ideEstab->nrInscEstab = $this->ob[1][11];
+		$this->obParsed->ideEstab->nrInscEstab = $this->ob[1][10];
+		
+		$this->obParsed->ideEstab->natJur = $this->ob[1][11];
 
 		$index = 2;
 
@@ -67,6 +63,8 @@ class EvtRetPJ extends Parse{
 		$lastDespProcJud = null;
 
 		$lastIdePgto = null;
+
+		$lastideOpSaude = null;
 
 		$this->obParsed->infoPgto = array();
 
@@ -86,7 +84,9 @@ class EvtRetPJ extends Parse{
 
 				$aux->isenImun = $auxOb[3];
 
-				$this->obParsed->idebenef[] = $aux;
+				$aux->ideEvtAdic = $auxOb[4];
+
+				$this->obParsed->idebenef = $aux;
 
 				$lastIdeBenef = $aux;
 
@@ -102,9 +102,7 @@ class EvtRetPJ extends Parse{
 
 				$aux->natRend = $auxOb[1];
 
-				$aux->paisResid = $auxOb[2];
-
-				$aux->observ = $auxOb[3];
+				$aux->observ = $auxOb[2];
 
 				$lastIdeBenef->idepgto[] = $aux;
 
@@ -122,131 +120,51 @@ class EvtRetPJ extends Parse{
 
 				$aux->dtFG = $auxOb[1];
 
-				$aux->vlrTotalPag = $auxOb[2];
+				$aux->vlrBruto = $auxOb[2];
 
-				$aux->vlrTotalCred = $auxOb[3];
+				$aux->indFciScp = $auxOb[3];
+
+				$aux->nrInscFciScp = $auxOb[4];
+
+				$aux->percSCP = $auxOb[5];
+
+				$aux->indJud = $auxOb[6];
+
+				$aux->paisResidExt = $auxOb[7];
+
+				$aux->dtEscrCont = $auxOb[8];
+				
+				$aux->observ = $auxOb[9];
+
+				if ($auxOb[10] || $auxOb[11] || $auxOb[12] || $auxOb[13] || $auxOb[14] || $auxOb[15] || $auxOb[16] || $auxOb[17] || $auxOb[18] || $auxOb[19] ){
+
+					$aux->retencoes = new stdClass();
+
+					$aux->retencoes->vlrBaseIR = $auxOb[10];
+
+					$aux->retencoes->vlrIR = $auxOb[11];
+
+					$aux->retencoes->vlrBaseAgreg = $auxOb[12];
+
+					$aux->retencoes->vlrAgreg = $auxOb[13];
+
+					$aux->retencoes->vlrBaseCSLL = $auxOb[14];
+
+					$aux->retencoes->vlrCSLL = $auxOb[15];
+
+					$aux->retencoes->vlrBaseCofins = $auxOb[16];
+
+					$aux->retencoes->vlrCofins = $auxOb[17];
+
+					$aux->retencoes->vlrBasePP = $auxOb[18];
+
+					$aux->retencoes->vlrPP = $auxOb[19];
+				
+				}
 
 				$lastIdePgto->infopgto[] = $aux;
 
 				$lastInfoPgto = $aux;
-
-			} else if ($cabecario == 'IR'){
-
-				$aux = new stdClass();
-
-				if (!isset($lastInfoPgto->ir)){
-
-					$lastInfoPgto->ir = array();
-
-				}
-
-				$aux->vlrBaseIR = $auxOb[1];
-
-				$aux->vlrIR = $auxOb[2];
-
-				$aux->vlrBaseNIR = $auxOb[3];
-
-				$aux->vlrNIR = $auxOb[4];
-
-				$aux->vlrDepIR = $auxOb[5];
-
-				$lastInfoPgto->ir[] = $aux;
-
-			} else if ($cabecario == 'CSLL'){
-
-				$aux = new stdClass();
-
-				if (!isset($lastInfoPgto->csll)){
-
-					$lastInfoPgto->csll = array();
-
-				}
-
-				$aux->vlrBaseCSLL = $auxOb[1];
-
-				$aux->vlrCSLL = $auxOb[2];
-
-				$aux->vlrBaseNCSLL = $auxOb[3];
-
-				$aux->vlrNCSLL = $auxOb[4];
-
-				$aux->vlrDepCSLL = $auxOb[5];
-
-				$lastInfoPgto->csll[] = $aux;
-
-			} else if ($cabecario == 'COFINS'){
-
-				$aux = new stdClass();
-
-				if (!isset($lastInfoPgto->cofins)){
-
-					$lastInfoPgto->csll = array();
-
-				}
-
-				$aux->vlrBaseCofins = $auxOb[1];
-
-				$aux->vlrCofins = $auxOb[2];
-
-				$aux->vlrBaseNCofins = $auxOb[3];
-
-				$aux->vlrNCofins = $auxOb[4];
-
-				$aux->vlrDepCofins = $auxOb[5];
-
-				$lastInfoPgto->cofins[] = $aux;
-
-			} else if ($cabecario == 'PP'){
-
-				$aux = new stdClass();
-
-				if (!isset($lastInfoPgto->pp)){
-
-					$lastInfoPgto->pp = array();
-
-				}
-
-				$aux->vlrBasePP = $auxOb[1];
-
-				$aux->vlrPP = $auxOb[2];
-
-				$aux->vlrBaseNPP = $auxOb[3];
-
-				$aux->vlrNPP = $auxOb[4];
-
-				$aux->vlrDepPP = $auxOb[5];
-
-				$lastInfoPgto->pp[] = $aux;
-
-			} else if ($cabecario == 'FCI'){
-
-				$aux = new stdClass();
-
-				if (!isset($lastInfoPgto->fci)){
-
-					$lastInfoPgto->fci = array();
-
-				}
-
-				$aux->nrInscFCI = $auxOb[1];
-
-				$lastInfoPgto->fci[] = $aux;
-
-			} else if ($cabecario == 'SCP'){
-
-				$aux = new stdClass();
-
-				if (!isset($lastInfoPgto->scp)){
-
-					$lastInfoPgto->scp = array();
-
-				}
-
-				$aux->nrInscSCP = $auxOb[1];
-
-				$aux->percSCP = $auxOb[2];
-
-				$lastInfoPgto->scp[] = $aux;
 
 			} else if ($cabecario == 'INFOPROCRET'){
 
@@ -258,29 +176,35 @@ class EvtRetPJ extends Parse{
 
 				}
 
-				$aux->infoProcRet = $auxOb[1];
+				$aux->tpProcRet = $auxOb[1];
 
-				$aux->tpProcRet = $auxOb[2];
+				$aux->nrProcRet = $auxOb[2];
 
-				$aux->nrProcRet = $auxOb[3];
+				$aux->codSusp = $auxOb[3];
 
-				$aux->codSusp = $auxOb[4];
+				$aux->vlrBaseSuspIR = $auxOb[4];
 
-				$aux->nIR = $auxOb[5];
+				$aux->vlrNIR = $auxOb[5];
 
-				$aux->depIR = $auxOb[6];
+				$aux->vlrDepIR = $auxOb[6];
 
-				$aux->nCSLL = $auxOb[7];
+				$aux->vlrBaseSuspCSLL = $auxOb[7];
 
-				$aux->depCSLL = $auxOb[8];
+				$aux->vlrNCSLL = $auxOb[8];
 
-				$aux->nCofins = $auxOb[9];
+				$aux->vlrDepCSLL = $auxOb[9];
 
-				$aux->depCofins = $auxOb[10];
+				$aux->vlrBaseSuspCofins = $auxOb[10];
 
-				$aux->nPP = $auxOb[11];
+				$aux->vlrNCofins = $auxOb[11];
 
-				$aux->depPP = $auxOb[12];
+				$aux->vlrDepCofins = $auxOb[12];
+
+				$aux->vlrBaseSuspPP = $auxOb[13];
+
+				$aux->vlrNPP = $auxOb[14];
+
+				$aux->vlrDepPP = $auxOb[15];
 
 				$lastInfoPgto->infoprocret[] = $aux;
 			
@@ -290,97 +214,56 @@ class EvtRetPJ extends Parse{
 
 				if (!isset($lastInfoPgto->infoProcJud)){
 
-					$lastInfoPgto->infoProcJud = array();
+					$lastInfoPgto->infoProcJud = new stdClass();
 
 				}
 
 				$aux->nrProc = $auxOb[1];
 
-				$aux->indOrigemRecursos = $auxOb[2];
+				$aux->indOrigRec = $auxOb[2];
 
-				$aux->desc = $auxOb[3];
+				$aux->cnpjOrigRecurso = $auxOb[3];
 
-				$lastInfoPgto->infoProcJud[] = $aux;
+				$aux->desc = $auxOb[4];
+
+				$aux->vlrDespCustas = $auxOb[5];
+
+				$aux->vlrDespAdvogados = $auxOb[6];
+
+				$lastInfoPgto->infoProcJud = $aux;
 
 				$lastInfoProcJud = $aux;
 
-			} else if ($cabecario == 'DESPPROCJUD'){
+			} else if ($cabecario == 'INFOPROCJUDAD'){
 
 				$aux = new stdClass();
 
-				if (!isset($lastInfoProcJud->despProcJud)){
+				if (!isset($lastInfoProcJud->infoProcJud)){
 
-					$lastInfoProcJud->despProcJud = array();
+					$lastInfoProcJud->infoProcJud =  new stdClass();
+
+					if (!isset($lastInfoProcJud->infoProcJud->ideadv)){
+						$lastInfoProcJud->infoProcJud->ideadv = array();
+					}
 
 				}
 
-				$aux->vlrDespCustas = $auxOb[1];
 
-				$aux->vlrDespAdvogados = $auxOb[2];
+				$aux->tpInscAdv = $auxOb[1];
 
-				$aux->despProcJud->ideAdv = new stdClass();
+				$aux->nrInscAdv = $auxOb[2];
 
-				$aux->despProcJud->tpInscAdv = $auxOb[3];
+				$aux->vlrAdv = $auxOb[3];
 
-				$aux->despProcJud->nrInscAdv = $auxOb[4];
+				$lastInfoProcJud->infoProcJud->ideadv[] = $aux;
 
-				$aux->despProcJud->vlrAdv = $auxOb[5];
-
-				$lastInfoProcJud->despProcJud[] = $aux;
-
-				$lastDespProcJud = $aux;
-
-			} else if ($cabecario == 'ORIGEMREC'){
+			} else if ($cabecario == 'INFOPGTOEXT'){
 
 				$aux = new stdClass();
 
-				if (!isset($lastInfoProcJud->origemRec)){
+				if(!isset($lastIdePgto->infoPgto->infoPgtoExt)){
 
-					$lastInfoProcJud->origemRec = array();
-
-				}
-
-				$aux->cnpjOrigRecurso = $auxOb[1];
-				
-				$lastInfoProcJud->origemRec[] = $aux;
-
-			} else if ($cabecario == 'ENDEXT'){
-
-				$aux = new stdClass();
-
-				if (!isset($lastIdePgto->infoPgtoExt->endExt)){
-
-					$lastIdePgto->infoPgtoExt->endExt = array();
-
-				}
-
-				$aux->nrInscFCI = $auxOb[1];
-
-				$aux->dscLograd = $auxOb[2];
-
-				$aux->nrLograd = $auxOb[3];
-
-				$aux->complem = $auxOb[4];
-
-				$aux->bairro = $auxOb[5];
-
-				$aux->cidade = $auxOb[6];
-
-				$aux->estado = $auxOb[7];
-
-				$aux->codPostal = $auxOb[8];
-
-				$aux->telef = $auxOb[9];
-
-				$lastIdePgto->infoPgtoExt->endExt[] = $aux;
-
-			} else if ($cabecario == 'INFOFISCAL'){
-
-				$aux = new stdClass();
-
-				if(!isset($lastIdePgto->infoPgtoExt->infoFiscal)){
-
-					$lastIdePgto->infoPgto->infoFiscal = array();
+					$lastIdePgto->infoPgto->infoPgtoExt = new stdClass();
 
 				}
 
@@ -388,11 +271,109 @@ class EvtRetPJ extends Parse{
 
 				$aux->nifBenef = $auxOb[2];
 
-				$aux->relFontPg = $auxOb[3];
+				$aux->frmTribut = $auxOb[3];
 
-				$aux->frmTribut = $auxOb[4];
+				if ($$auxOb[4] ||$auxOb[5] || $auxOb[6] || $auxOb[7] || $auxOb[8] || $auxOb[9]){
+					$aux->endExt = new stdClass();
 
-				$lastIdePgto->infoPgtoExt->infoFiscal[] = $aux;
+					$aux->endExt->dscLograd = $auxOb[5];
+					
+					$aux->endExt->nrLograd = $auxOb[6];
+
+					$aux->endExt->complem = $auxOb[7];
+
+					$aux->endExt->bairro = $auxOb[8];
+
+					$aux->endExt->cidade = $auxOb[9];
+
+					$aux->endExt->estado = $auxOb[10];
+
+					$aux->endExt->codPostal = $auxOb[11];
+					
+					$aux->endExt->telef = $auxOb[12];
+
+				}
+
+				$lastIdePgto->infoPgto->infoPgtoExt = $aux;
+
+			}  else if ($cabecario == 'IDEOPSAUDE'){
+
+				$aux = new stdClass();
+
+				if(!isset($lastIdePgto->infoPgto->ideOpSaude)){
+
+					$lastIdePgto->infoPgto->ideOpSaude = array();
+
+				}
+
+				$aux->nrInsc = $auxOb[1];
+
+				$aux->regANS = $auxOb[2];
+
+				$aux->vlrSaude = $auxOb[3];
+
+				$lastIdePgto->infoPgto->ideOpSaude = $aux;
+
+				$lastideOpSaude = $aux;
+			} else if ($cabecario == 'INFOREEMB'){
+
+				$aux = new stdClass();
+
+				if(!isset($lastideOpSaude->infoReemb)){
+
+					$lastideOpSaude->infoReemb = array();
+
+				}
+
+				$aux->tpInsc = $auxOb[1];
+
+				$aux->nrInsc = $auxOb[2];
+
+				$aux->vlrReemb = $auxOb[3];
+
+				$aux->vlrReembAnt = $auxOb[4];
+
+				$aux->vlrReembAnt = $auxOb[4];
+
+				$lastideOpSaude->infoReemb[] = $aux;
+
+			} else if ($cabecario == 'INFODEPENDPL'){
+
+				$aux = new stdClass();
+
+				if(!isset($lastideOpSaude->infoDependPl)){
+
+					$lastideOpSaude->infoDependPl = array();
+
+				}
+
+				$aux->cpfDep = $auxOb[1];
+
+				$aux->vlrSaude = $auxOb[2];
+
+				$lastideOpSaude->infoDependPl[] = $aux;
+
+				$lastinfoDependPl = $aux;
+
+			} else if ($cabecario == 'INFOREEMBDEP'){
+
+				$aux = new stdClass();
+
+				if(!isset($lastinfoDependPl->infoReembDep)){
+
+					$lastinfoDependPl->infoReembDep = array();
+
+				}
+
+				$aux->tpInsc = $auxOb[1];
+
+				$aux->nrInsc = $auxOb[2];
+
+				$aux->vlrReemb = $auxOb[3];
+
+				$aux->vlrReembAnt = $auxOb[4];
+
+				$lastinfoDependPl->infoReembDep[] = $aux;
 
 			}
 

@@ -17,82 +17,58 @@ class EvtRetPF extends Parse{
 		$this->obParsed->config = new stdClass();
 
 		$this->obParsed->modo = $this->ob[0][1];
+    	
+    	$this->obParsed->idEvento = $this->ob[0][3];
+		
+        $this->obParsed->nrrecibo = $this->ob[1][0];
 
-		$this->obParsed->idEvento = $this->ob[0][3];
+    	$this->obParsed->config->tpAmb = $this->ob[1][1];
+    	
+    	$this->obParsed->config->verProc = $this->ob[1][3];
 
-		$this->obParsed->config->eventoVersion = $this->eventoVersion;
+    	$this->obParsed->config->eventoVersion = $this->eventoVersion;
+        
+        $this->obParsed->config->serviceVersion = $this->serviceVersion;
+    	
+    	$this->obParsed->config->empregador = new stdClass();
+    	
+    	$this->obParsed->config->empregador->tpInsc = $this->ob[1][4];
 
-		$this->obParsed->config->serviceVersion = $this->serviceVersion;
+    	$this->obParsed->config->empregador->nrInsc = $this->ob[1][5];
 
-		$this->obParsed->ideEvento = new stdClass();
+    	$this->obParsed->config->transmissor = $this->obParsed->config->empregador;
 
-		$this->obParsed->ideEvento->indRetif = $this->ob[1][1];
+        $this->obParsed->config->empregador->nmRazao = $this->ob[1][6];
 
-		$this->obParsed->idEvento->nrRecibo = $this->ob[1][2];
+        $this->obParsed->indretif = $this->ob[1][8];
 
-		$this->obParsed->ideEvento->perApur = $this->ob[1][3];
-
-		$this->obParsed->config->empregador = new stdClass();
-
-		$this->obParsed->config->transmissor = $this->obParsed->config->empregador;
-
-		$this->obParsed->config->ideEvento->empregador->nmRazao = $this->ob[1][4];
-
-		$this->obParsed->config->ideEvento->tpAmb = $this->ob[1][5];
-
-		$this->obParsed->config->ideEvento->procEmi = $this->ob[1][6];
-
-		$this->obParsed->config->ideEvento->verProc = $this->ob[1][7];
-
-		$this->obParsed->ideContri = new stdClass();
-
-		$this->obParsed->config->empregador->ideContri->tpInsc = $this->ob[1][8];
-
-		$this->obParsed->config->empregador->ideContri->nrInsc = $this->ob[1][9];
+        $this->obParsed->perapur = $this->ob[1][7];
 
 		$this->obParsed->ideEstab = new stdClass();
 
-		$this->obParsed->ideEstab->tpInscEstab = $this->ob[1][10];
+		$this->obParsed->ideEstab->tpInscEstab = $this->ob[1][9];
 
-		$this->obParsed->ideEstab->nrInscEstab = $this->ob[1][11];
-
-		$this->obParsed->ideEstab->ideBenef = new stdClass();
-
-		$this->obParsed->ideBenef->cpfBenef = $this->ob[1][12];
-
-		$this->obParsed->ideBenef->nmBenef = $this->ob[1][13];
+		$this->obParsed->ideEstab->nrInscEstab = $this->ob[1][10];
+		
+		$this->obParsed->ideEstab->natJur = $this->ob[1][11];
 
 		$index = 2;
 
 		$lastInfoPgto = null;
 
-		$lastDetDed = null;
-
-		$lastBenefPen = null;
-
-		$lastRendIsento = null;
-
-		$lastInfoProcRet = null;
-
-		$lastDespProcJudinRRA = null;
+		$lastIdeBenef = null;
 
 		$lastInfoProcJud = null;
 
-		$lastIdeAdvdoinRRA = null;
+		$lastDespProcJud = null;
 
-		$lastDespProcJuddesProc = null;
+		$lastIdePgto = null;
 
-		$lastIdeAdvdesProc = null;
+		$lastInfoPgtoDetDed = null;
 
-		$lastIdeBenef = null;
+		$lastinfoprocret = null;
 
-		$lastIdeOpSaude = null;
-
-		$lastInfoReemb = null;
-
-		$lastInfoDependPl = null;
-
-		$this->obParsed->ideEstab = array();
+		$this->obParsed->infoPgto = array();
 
 		for ($i = $index; $i < count($this->ob); $i++){
 
@@ -100,132 +76,148 @@ class EvtRetPF extends Parse{
 
 			$cabecario = $auxOb[0];
 
-			if ($cabecario == 'IDEPGTO'){
+			if ($cabecario == 'IDEBENEF'){
 
 				$aux = new stdClass();
 
-				$aux->natRend = $auxOb[1];
+				if (!isset($this->obParsed->idebenef)){
 
-				$aux->paisResid = $auxOb[2];
-
-				$aux->observ = $auxOb[3];
-
-				$this->obParsed->idepgto[] = $aux;
-
-				$lastIdePgto = $aux;
-
-            } else if ($cabecario == 'INFOPGTO'){
-
-            	$aux = new stdClass();
-
-            	if (!isset($lastIdePgto->infopgto)){
-
-            		$lastIdePgto->infopgto = array();
-
-            	}
-
-            	$aux->dtFG = $auxOb[1];
-
-            	$aux->indDecTerc = $auxOb[2];
-
-            	$aux->vlrRendBruto = $auxOb[3];
-
-            	$aux->vlrRendTrib = $auxOb[4];
-
-            	$aux->vlrIR = $auxOb[5];
-
-            	$aux->vlrRendSusp = $auxOb[6];
-
-            	$aux->vlrNIR = $auxOb[7];
-
-            	$aux->vlrDeposito = $auxOb[8];
-
-            	$aux->vlrCompAnoCalend = $auxOb[9];
-
-            	$aux->vlrCompAnoAnt = $auxOb[10];
-
-            	$aux->vlrCompAnoAnt = $auxOb[11];
-
-            	$lastIdePgto->infoPgto[] = $aux;
-
-            	$lastInfoPgto = $aux;
-
-            } else if ($cabecario == 'FCI'){
-
-            	$aux = new stdClass();
-
-            	if (!isset($lastInfoPgto->fci)){
-
-            		$lastInfoPgto->fci = array();
-
-            	}
-
-            	$aux->nrInscFCI = $auxOb[1];
-
-            	$lastInfoPgto->fci[] = $aux;
-
-            } else if ($cabecario == 'SCP'){
-
-            	$aux = new stdClass();
-
-            	if (!isset($lastInfoPgto->scp)){
-
-            		$lastInfoPgto->scp = array();
-
-            	}
-
-            	$aux->nrInscSCP = $auxOb[1];
-
-            	$aux->percSCP = $auxOb[2];
-
-            	$lastInfoPgto->scp[] = $aux;
-
-            } else if ($cabecario == 'DETDED'){
-
-            	$aux = new stdClass();
-
-            	if (!isset($lastInfoPgto->detded)){
-
-            		$lastInfoPgto->detded = array();
-
-            	}
-
-            	$aux->indTpDeducao = $auxOb[1];
-
-            	$aux->vlrDeducao = $auxOb[2];
-
-            	$aux->vlrDedSusp = $auxOb[3];
-
-            	$aux->nrInscPrevComp = $auxOb[4];
-
-            	$lastInfoPgto->detded[] = $aux;
-
-            	$lastDetDed = $aux;
-
-			} else if ($cabecario == 'BENEFPEN'){
-
-				$aux = new stdClass();
-
-				if (!isset($lastDetDed->benefpen)){
-
-					$lastDetDed->benefpen = array();
+					$this->obParsed->idebenef = array();
 
 				}
 
-				$aux->nome = $auxOb[1];
+				$aux->cnpjBenef = $auxOb[1];
+
+				$aux->nmBenef = $auxOb[2];
+
+				$aux->ideEvtAdic = $auxOb[3];
+
+				$this->obParsed->idebenef = $aux;
+
+				$lastIdeBenef = $aux;
+
+			} else if ($cabecario == 'IDEDEP'){
+
+				$aux = new stdClass();
+
+				if (!isset($this->obParsed->idedep)){
+
+					$this->obParsed->idedep = array();
+
+				}
+
+				$aux->cpfDep = $auxOb[1];
 
 				$aux->relDep = $auxOb[2];
 
 				$aux->descrDep = $auxOb[3];
 
-				$aux->cpf = $auxOb[4];
+				$this->obParsed->idedep = $aux;
 
-				$aux->dtNascto = $auxOb[5];
+			} else if ($cabecario == 'IDEPGTO'){
 
-				$lastDetDed->benefpen[] = $aux;
+				$aux = new stdClass();
 
-				$lastBenefPen = $aux;
+				$aux = new stdClass();
 
+				if (!isset($this->obParsed->idepgto)){
+
+					$this->obParsed->idepgto = array();
+
+				}
+
+				$aux->natRend = $auxOb[1];
+
+				$aux->observ = $auxOb[2];
+
+				$this->obParsed->idepgto[] = $aux;
+
+				$lastIdePgto = $aux;
+
+			} else if ($cabecario == 'INFOPGTO'){
+
+				$aux = new stdClass();
+
+				if (!isset($lastIdePgto->infopgto)){
+
+					$lastIdePgto->infopgto = array();
+
+				}
+
+				$aux->dtFG = $auxOb[1];
+
+				$aux->compFP = $auxOb[2];
+
+				$aux->indDecTerc = $auxOb[3];
+
+				$aux->vlrRendBruto = $auxOb[4];
+
+				$aux->vlrRendTrib = $auxOb[5];
+
+				$aux->vlrIR = $auxOb[6];
+
+				$aux->indRRA = $auxOb[7];
+
+				$aux->indFciScp = $auxOb[8];
+				
+				$aux->nrInscFciScp = $auxOb[9];
+
+				$aux->percSCP = $auxOb[10];
+
+				$aux->indJud = $auxOb[11];
+
+				$aux->paisResidExt = $auxOb[12];
+
+				$aux->dtEscrCont = $auxOb[13];
+
+				$aux->observ = $auxOb[14];
+
+
+				$lastIdePgto->infopgto[] = $aux;
+
+				$lastInfoPgto = $aux;
+
+			} else if ($cabecario == 'DETDED'){
+
+				$aux = new stdClass();
+
+				if (!isset($lastInfoPgto->detded)){
+
+					$lastInfoPgto->detded = array();
+
+				}
+
+				$aux->indTpDeducao = $auxOb[1];
+
+				$aux->vlrDeducao = $auxOb[2];
+
+				$aux->infoEntid = $auxOb[3];
+
+				$aux->nrInscPrevComp = $auxOb[4];
+
+				$aux->vlrPatrocFunp = $auxOb[5];
+
+				$lastInfoPgto->detded[] = $aux;
+
+				$lastInfoPgtoDetDed = $aux;
+			
+			} else if ($cabecario == 'BENEFPEN'){
+
+				$aux = new stdClass();
+
+				if (!isset($lastInfoPgtoDetDed->benefPen)){
+
+					$lastInfoPgtoDetDed->benefPen = array();
+
+				}
+
+				$aux->cpfDep = $auxOb[1];
+
+				$aux->vlrDepen = $auxOb[2];
+
+				$lastInfoPgtoDetDed->benefPen[] = $aux;
+
+			
 			} else if ($cabecario == 'RENDISENTO'){
 
 				$aux = new stdClass();
@@ -245,10 +237,8 @@ class EvtRetPF extends Parse{
 				$aux->dtLaudo = $auxOb[4];
 
 				$lastInfoPgto->rendisento[] = $aux;
-
-				$lastRendIsento = $aux;
-
-			} else if ($cabecario == 'INFOPROCRET'){	
+			
+			} else if ($cabecario == 'INFOPROCRET'){
 
 				$aux = new stdClass();
 
@@ -266,19 +256,60 @@ class EvtRetPF extends Parse{
 
 				$aux->vlrNRetido = $auxOb[4];
 
-				$aux->vlrDep = $auxOb[5];
+				$aux->vlrDepJud = $auxOb[5];
+
+				$aux->vlrCmpAnoCal = $auxOb[6];
+
+				$aux->vlrCmpAnoAnt = $auxOb[7];
+
+				$aux->vlrRendSusp = $auxOb[8];
 
 				$lastInfoPgto->infoprocret[] = $aux;
 
-				$lastInfoProcRet = $aux;
-
-			} else if ($cabecario == 'INFORRA')	{
+				$lastinfoprocret = $aux;
+			
+			} else if ($cabecario == 'DEDSUSP'){
 
 				$aux = new stdClass();
 
-				if (!isset($lastInfoPgto->inforra)){
+				if (!isset($lastinfoprocret->dedSusp)){
 
-					$lastInfoPgto->inforra = array();
+					$lastinfoprocret->dedSusp = array();
+
+				}
+
+				$aux->indTpDeducao = $auxOb[1];
+
+				$aux->vlrDedSusp = $auxOb[2];
+
+				$lastinfoprocret->dedSusp[] = $aux;
+
+				$lastinfoproretSuspBenefPen = $aux;
+				
+			}  else if ($cabecario == 'BENEFPEN'){
+
+				$aux = new stdClass();
+
+				if (!isset($lastinfoproretSuspBenefPen->benefPen)){
+
+					$lastinfoproretSuspBenefPen->benefPen = array();
+
+				}
+
+				$aux->indTpDeducao = $auxOb[1];
+
+				$aux->vlrDedSusp = $auxOb[2];
+
+				$lastinfoproretSuspBenefPen->benefPen[] = $aux;
+
+				
+			}  else if ($cabecario == 'INFORRA'){
+
+				$aux = new stdClass();
+
+				if (!isset($lastInfoPgto->infoRRA)){
+
+					$lastInfoPgto->infoRRA = array();
 
 				}
 
@@ -292,35 +323,29 @@ class EvtRetPF extends Parse{
 
 				$aux->qtdMesesRRA = $auxOb[5];
 
-				$lastInfoPgto->inforra[] = $aux;
+				$aux->cnpjOrigRecurso = $auxOb[6];
 
-				$lastInfoRRA = $aux;
+				if ($auxOb[7] || $auxOb[8]){
+					
+					$aux->despprocjud = new stdClass();
 
-			} else if ($cabecario == 'DESPPROCJUDINRRA'){
+					$aux->despprocjud->vlrDespCustas = $auxOb[7];
 
-				$aux = new stdClass();
+					$aux->despprocjud->vlrDespAdvogados = $auxOb[8];
 
-				if (!isset($lastInfoRRA->despprocjudinrra)){
-
-					$lastInfoRRA->despprocjudinrra = array();
+					$lastDespprocjud = $aux->despprocjud;
 
 				}
-
-				$aux->vlrDespCustas = $auxOb[1];
-
-				$aux->vlrDespAdvogados = $auxOb[2];
-
-				$lastInfoRRA->despprocjudinrra[] = $aux;
-
-				$lastDespProcJudinRRA = $aux;
-
-			} else if ($cabecario == 'IDEADVDOINRRA'){
+				
+				$lastInfoPgto->infoRRA[] = $aux;
+			
+			}  else if ($cabecario == 'IDEADVRRA'){
 
 				$aux = new stdClass();
 
-				if (!isset($lastDespProcJud->ideadvdoinrra)){
+				if (!isset($lastDespprocjud->ideadv)){
 
-					$lastDespProcJud->ideadvdoinrra = array();
+					$lastDespprocjud->ideadv = array();
 
 				}
 
@@ -329,32 +354,14 @@ class EvtRetPF extends Parse{
 				$aux->nrInscAdv = $auxOb[2];
 
 				$aux->vlrAdv = $auxOb[3];
-
-				$lastDespProcJud->ideadvdoinrra[] = $aux;
-
-				$lastIdeAdvdoinRRA = $aux;
-
-			} else if ($cabecario == 'ORIGEMRECINRRA'){
-
-				$aux = new stdClass();
-
-				if(!isset($lastInfoRRA->origemrecinrra)){
-
-					$lastInfoRRA->origemrecinrra = array();
-
-				}
-
-				$aux->cnpjOrigRecurso = $auxOb[1];
-
-				$lastInfoRRA->origemrecinrra[] = $aux;
-
+			
 			} else if ($cabecario == 'INFOPROCJUD'){
 
 				$aux = new stdClass();
 
-				if(!isset($lastInfoPgto->infoprocjud)){
+				if (!isset($lastInfoPgto->infoProcJud)){
 
-					$lastInfoPgto->infoprocjud = array();
+					$lastInfoPgto->infoProcJud = new stdClass();
 
 				}
 
@@ -362,37 +369,25 @@ class EvtRetPF extends Parse{
 
 				$aux->indOrigRec = $auxOb[2];
 
-				$aux->desc = $aux[3];
+				$aux->cnpjOrigRecurso = $auxOb[3];
 
-				$lastInfoPgto->infoprocjud[] = $aux;
+				$aux->desc = $auxOb[4];
+
+				$aux->vlrDespCustas = $auxOb[5];
+
+				$aux->vlrDespAdvogados = $auxOb[6];
+
+				$lastInfoPgto->infoProcJud = $aux;
 
 				$lastInfoProcJud = $aux;
 
-			} else if ($cabecario == 'DESPPROCJUDDESPROC') {
+			}  else if ($cabecario == 'IDEADVJUD'){
 
 				$aux = new stdClass();
 
-				if(!isset($lastInfoProcJud->despprocjuddesproc)){
+				if (!isset($lastInfoProcJud->ideAdv)){
 
-					$lastInfoProcJud->despprocjuddesproc = array();
-
-				}
-
-				$aux->vlrDespCustas = $auxOb[1];
-
-				$aux->vlrDespAdvogados = $auxOb[2];
-
-				$lastInfoProcJud->despprocjuddesproc[] = $aux;
-
-				$lastDespProcJuddesProc = $aux;
-
-			} else if ($cabecario == 'IDEADVDESPROC'){
-
-				$aux = new stdClass();
-
-				if(!isset($lastDespProcJud->ideadvdesproc)){
-
-					$lastDespProcJud->ideadvdesproc = array();
+					$lastInfoProcJud->ideAdv = array();
 
 				}
 
@@ -402,59 +397,15 @@ class EvtRetPF extends Parse{
 
 				$aux->vlrAdv = $auxOb[3];
 
-				$lastDespProcJud->ideadvdesproc[] = $aux;
+				$lastInfoProcJud->ideAdv = $aux;
 
-				$lastIdeAdvdesProc = $aux;
-
-			} else if ($cabecario == 'ORIGEMRECDESPROC'){
+			} else if ($cabecario == 'INFOPGTOEXT'){
 
 				$aux = new stdClass();
 
-				if(!isset($lastInfoProcJud->origemrecdesproc)){
+				if(!isset($lastIdePgto->infoPgto->infoPgtoExt)){
 
-					$lastInfoProcJud->origemrecdesproc = array();
-
-				}
-
-				$aux->cnpjOrigRecurso = $auxOb[1];
-
-				$lastInfoProcJud->origemrecdesproc[] = $aux;
-
-			} else if ($cabecario == 'ENDEXT'){
-
-				$aux = new stdClass();
-
-				if(!isset($lastIdePgto->infopgtoext->endext)){
-
-					$lastIdePgto->infopgtoext->endext = array();
-
-				}
-
-				$aux->dscLograd = $auxOb[1];
-
-				$aux->nrLograd = $auxOb[2];
-
-				$aux->complem = $auxOb[3];
-
-				$aux->bairro = $auxOb[4];
-
-				$aux->cidade = $auxOb[5];
-
-				$aux->estado = $auxOb[6];
-
-				$aux->codPostal = $auxOb[7];
-
-				$aux->telef = $auxOb[8];
-
-				$lastIdePgto->infopgtoext->endext[] = $aux;
-
-			} else if ($cabecario == 'INFOFISCAL') {
-
-				$aux = new stdClass();
-
-				if(!isset($lastIdePgto->infopgtoext->infofiscal)){
-
-					$lastIdePgto->infopgtoext->infofiscal = array();
+					$lastIdePgto->infoPgto->infoPgtoExt = new stdClass();
 
 				}
 
@@ -462,97 +413,32 @@ class EvtRetPF extends Parse{
 
 				$aux->nifBenef = $auxOb[2];
 
-				$aux->frmTribut = $auxOb[3];
+				$aux->relFontPg = $auxOb[3];
 
-				$lastIdePgto->infopgtoext->infofiscal[] = $aux;
+				$aux->frmTribut = $auxOb[4];
 
-			} else if ($cabecario == 'IDEOPSAUDE'){
+				if ($$auxOb[5] ||$auxOb[6] || $auxOb[7] || $auxOb[8] || $auxOb[9] || $auxOb[10]){
+					$aux->endExt = new stdClass();
 
-				$aux = new stdClass();
+					$aux->endExt->dscLograd = $auxOb[5];
+					
+					$aux->endExt->nrLograd = $auxOb[6];
 
-				if(!isset($lastIdeBenef->ideopsaude)){
+					$aux->endExt->complem = $auxOb[7];
 
-					$lastIdeBenef->ideopsaude = array();
+					$aux->endExt->bairro = $auxOb[8];
 
-				}
+					$aux->endExt->cidade = $auxOb[9];
 
-				$aux->nrInsc = $auxOb[1];
+					$aux->endExt->estado = $auxOb[10];
 
-				$aux->regANS = $auxOb[2];
-
-				$aux->vlrSaude = $auxOb[3];
-
-				$lastIdeBenef->ideopsaude[] = $aux;
-
-				$lastIdeOpSaude = $aux;
-
-			} else if ($cabecario == 'INFOREEMB'){
-
-				$aux = new stdClass();
-
-				if(!isset($lastIdeOpSaude->inforeemb)){
-
-					$lastIdeOpSaude->inforeemb = array();
+					$aux->endExt->codPostal = $auxOb[11];
+					
+					$aux->endExt->telef = $auxOb[12];
 
 				}
 
-				$aux->tpInsc = $auxOb[1];
-
-				$aux->nrInsc = $auxOb[2];
-
-				$aux->vlrReemb = $auxOb[3];
-
-				$aux->vlrReembAnt = $auxOb[4];
-
-				$lastIdeOpSaude->inforeemb[] = $aux;
-
-				$lastInfoReemb = $aux;
-
-			} else if ($cabecario == 'INFODEPENDPL'){
-
-				$aux = new stdClass();
-
-				if(!isset($lastIdeOpSaude->infodependpl)){
-
-					$lastIdeOpSaude->infodependpl = array();
-
-				}
-
-				$aux->cpf = $auxOb[1];
-
-				$aux->dtNascto = $auxOb[2];
-
-				$aux->nome = $auxOb[3];
-
-				$aux->relDep = $auxOb[4];
-
-				$aux->vlrSaude = $auxOb[5];
-
-				$lastIdeOpSaude->infodependpl[] = $aux;
-
-				$lastInfoDependPl = $aux;
-				
-			} else if ($cabecario == 'INFOREEMBDEP'){
-
-				$aux = new stdClass();
-
-				if(!isset($lastInfoDependPl->inforeembdep)){
-
-					$lastInfoDependPl->inforeembdep = array();
-
-				}
-
-				$aux->tpInsc = $auxOb[1];
-
-				$aux->nrInsc = $auxOb[2];
-
-				$aux->vlrReemb = $auxOb[3];
-
-				$aux->vlrReembAnt = $auxOb[4];
-
-				$lastInfoDependPl->inforeembdep[] = $aux;
-
-				$lastInfoReembDep = $aux;
+				$lastIdePgto->infoPgto->infoPgtoExt = $aux;
 
 			}
 

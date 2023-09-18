@@ -10,7 +10,7 @@ use NFePHP\EFDReinf\Parses\Parse;
 use stdClass;
 
 class EvtRet extends Parse {
-
+    
 
 	public function convert(){
 

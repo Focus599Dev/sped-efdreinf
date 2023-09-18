@@ -1,763 +1,545 @@
 <?php
 
-/*
- *
- */
-
 namespace NFePHP\EFDReinf\Factories;
 
 /**
+ * Class EFD-Reinf EvtRetCons Event R-4020 constructor
  *
+ * @category  Library
+ * @package   NFePHP\EFDReinf
+ * @copyright NFePHP Copyright (c) 2017 - 2022
+ * @license   http://www.gnu.org/licenses/lgpl.txt LGPLv3+
+ * @license   https://opensource.org/licenses/MIT MIT
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ * @author    Roberto L. Machado <linux.rlm at gmail dot com>
+ * @link      http://github.com/nfephp-org/sped-efdreinf for the canonical source repository
  */
 
 use NFePHP\EFDReinf\Common\Factory;
 use NFePHP\EFDReinf\Common\FactoryInterface;
 use NFePHP\EFDReinf\Common\FactoryId;
 use NFePHP\Common\Certificate;
+use NFePHP\Common\Strings;
+use NFePHP\EFDReinf\Factories\Traits\FormatNumber;
+use NFePHP\EFDReinf\Factories\Traits\RegraNomeValido;
 use stdClass;
 
 class EvtRetPJ extends Factory implements FactoryInterface
 {
-	/**
+    use FormatNumber, RegraNomeValido;
+
+    /**
      * Constructor
      * @param string $config
      * @param stdClass $std
      * @param Certificate $certificate
      * @param string $data
      */
-	public function __construct($config,
-     stdClass $std,
-      Certificate $certificate = null,
-       $data = '')
-	{
-		$params = new \stdClass();
+    public function __construct(
+        $config,
+        stdClass $std,
+        Certificate $certificate = null,
+        $data = ''
+    ) {
+        $params = new \stdClass();
+        $params->evtName = 'evt4020PagtoBeneficiarioPJ';
+        $params->evtTag = 'evtRetPJ';
+        $params->evtAlias = 'R-4020';
+        parent::__construct($config, $std, $params, $certificate, $data);
+    }
 
-		$params->evtName = 'evtRetPJ';
-
-		$params->evtTag = 'evtRetPJ';
-
-		$params->evtAlias = 'R-4020';
-
-		parent::__construct($config, $std, $params, $certificate, $data);
-
-	}
-
-	/**
+    /**
      * Node constructor
      */
-	protected function toNode()
-	{
-
-		$ideContri = $this->node->getElementsByTagName('ideContri')->item(0);
+    protected function toNode()
+    {
+        $ideContri = $this->node->getElementsByTagName('ideContri')->item(0);
         //o idEvento pode variar de evento para evento
         //então cada factory individualmente terá de construir o seu
-        
         $ideEvento = $this->dom->createElement("ideEvento");
-
         $this->dom->addChild(
             $ideEvento,
             "indRetif",
             $this->std->indretif,
             true
         );
-
+        if ($this->std->indretif == 2 && empty($this->std->nrrecibo)) {
+            throw new \Exception("Para retificar o evento DEVE ser informado o "
+                . "número do RECIBO do evento anterior que está retificando.");
+        }
         $this->dom->addChild(
             $ideEvento,
             "nrRecibo",
             !empty($this->std->nrrecibo) ? $this->std->nrrecibo : null,
-            false
+            $this->std->indretif == 2 ? true : false
         );
-
         $this->dom->addChild(
             $ideEvento,
             "perApur",
             $this->std->perapur,
             true
         );
-
         $this->dom->addChild(
             $ideEvento,
-            "nmRazao",
-            $this->std->nmrazao,
+            "tpAmb",
+            $this->tpAmb,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "procEmi",
+            $this->procEmi,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "verProc",
+            $this->verProc,
+            true
+        );
+        $this->node->insertBefore($ideEvento, $ideContri);
+        if (!empty($this->std->natjur)) {
+            $infoComplContri = $this->dom->createElement('infoComplContri');
+            $this->dom->addChild(
+                $infoComplContri,
+                "natJur",
+                $this->std->ideEstab->natjur,
+                true
+            );
+            $ideContri->appendChild($infoComplContri);
+        }
+
+        $ideEstab = $this->dom->createElement("ideEstab");
+        $this->dom->addChild(
+            $ideEstab,
+            "tpInscEstab",
+            $this->std->ideestab->tpinscestab,
+            true
+        );
+        $this->dom->addChild(
+            $ideEstab,
+            "nrInscEstab",
+            $this->std->ideestab->nrinscestab,
             true
         );
 
-        $this->dom->addChild(
-        	$ideEvento,
-        	"tpAmb",
-        	$this->tpamb,
-        	true
-        );
-
-        $this->dom->addChild(
-        	$ideEvento,
-        	"procEmi",
-        	$this->procemi,
-        	true
-        );
-
-        $this->dom->addChild(
-        	$ideEvento,
-        	"verProc",
-        	$this->verproc,
-        	true
-        );
-
-        $this->node->insertBefore($ideEvento, $ideContri);
-
-        //cria novo ideContri
-        $ideContri = $this->dom->createElement("ideContri");
-
-        $this->dom->addChild(
-        	$ideContri,
-        	"tpInsc",
-        	$this->tpinsc,
-        	true
-        );
-
-        $this->dom->addChild(
-        	$ideContri,
-        	"nrInsc",
-        	$this->nrinsc,
-        	true
-        );
-
-        $this->node->insertBefore($ideContri, $ideEstab);
-
-        $ides = $this->std->ideEstab;
-
-        $ideEstab = $this->dom->createElement("ideEstab");
-
-        $this->dom->addChild(
-        	$ideEstab,
-        	"tpInscEstab",
-        	$ides->tpinscestab,
-        	true
-        );
-
-        $this->dom->addChild(
-        	$ideEstab,
-        	"nrInscEstab",
-        	$ides->nrinscestab,
-        	true
-        );
-
-        $this->node->insertBefore($ideEstab, $ideBenef);
-
-        $ben = $ides->ideBenef;
-
-        $ideBenef = $this->dom->createElement("ideBenef");
-
-        $this->dom->addChild(
-        	$ideBenef,
-        	"cpfBenef",
-        	!empty($ben->cpfbenef) ? $ben->cpfbenef : null,
-        	false
-        );
-
+        $ideBenef = $this->dom->createElement('ideBenef');
         $this->dom->addChild(
             $ideBenef,
-            "nmBenef",
-            !empty($ben->nmbenef) ? $ben->nmbenef : null,
+            "cnpjBenef",
+            $this->std->idebenef->cnpjbenef ?? null,
+            false
+        );
+        if (!empty($this->std->idebenef->nmbenef)) {
+            $nome = self::validateName($this->std->idebenef->nmbenef ?? null);
+            $this->dom->addChild(
+                $ideBenef,
+                "nmBenef",
+                $nome,
+                false
+            );
+        }
+        $this->dom->addChild(
+            $ideBenef,
+            "isenImun",
+            $this->std->idebenef->isenimun ?? null,
+            false
+        );
+        $this->dom->addChild(
+            $ideBenef,
+            "ideEvtAdic",
+            $this->std->idebenef->ideevtadic ?? null,
             false
         );
 
-        $this->dom->addChild(
-        	$ideEstab,
-        	"isenImun",
-        	$ben->isenimun,
-        	true
-        );
-
-        foreach ($ben->idepgto as $idep) {
-
-        	$idePgto = $this->dom->createElement("idePgto");
-
-        	$this->dom->addChild(
-        		$idePgto,
-        		"natRend",
-        		$idep->natrend,
-        		true
-        	);
-
-        	$this->dom->addChild(
-        		$idePgto,
-        		"paisResid",
-        		$idep->paisresid,
-        		true
-        	);
-
-        	$this->dom->addChild(
-        		$idePgto,
-        		"observ",
-        		!empty($idep->observ) ? $idep->observ : null,
-        		false
-       	    );
-
-       	    foreach ($idep->infopgto as $infop) {
-
-       	    	$infoPgto = $this->dom->createElement("infoPgto");
-
-       	    	$this->dom->addChild(
-        			$infoPgto,
-        			"dtFG",
-        			$infop->dtfg,
-        			true
-        	    );
-
-        	    $this->dom->addChild(
+        foreach ($this->std->idebenef->idepgto as $pgto) {
+            $idePgto = $this->dom->createElement('idePgto');
+            $this->dom->addChild(
+                $idePgto,
+                "natRend",
+                $pgto->natrend,
+                true
+            );
+            $this->dom->addChild(
+                $idePgto,
+                "observ",
+                $pgto->observ ?? null,
+                false
+            );
+            foreach ($pgto->infopgto as $info) {
+                $infoPgto = $this->dom->createElement('infoPgto');
+                $this->dom->addChild(
                     $infoPgto,
-                    "vlrTotalPag",
-                    number_format($infop->vlrtotalpag, 2, ',', ''),
+                    "dtFG",
+                    $info->dtfg,
                     true
                 );
-
-        	    $this->dom->addChild(
+                $this->dom->addChild(
                     $infoPgto,
-                    "vlrTotalCred",
-                    number_format($infop->vlrtotalcred, 2, ',', ''),
+                    "vlrBruto",
+                    self::format($info->vlrbruto),
                     true
                 );
-
-                if (!empty($infop->ir)) {
-
-                	$inir = $infop->ir;
-
-                	$IR = $this->dom->createElement("IR");
-
-                	$this->dom->addChild(
-                        $IR,
+                $this->dom->addChild(
+                    $infoPgto,
+                    "indFciScp",
+                    $info->indfciscp ?? null,
+                    false
+                );
+                $this->dom->addChild(
+                    $infoPgto,
+                    "nrInscFciScp",
+                    $info->nrinscfciscp ?? null,
+                    false
+                );
+                $this->dom->addChild(
+                    $infoPgto,
+                    "percSCP",
+                    self::format($info->percscp ?? null, 1),
+                    false
+                );
+                $this->dom->addChild(
+                    $infoPgto,
+                    "indJud",
+                    $info->indjud ?? null,
+                    false
+                );
+                $this->dom->addChild(
+                    $infoPgto,
+                    "paisResidExt",
+                    $info->paisresidext ?? null,
+                    false
+                );
+                $this->dom->addChild(
+                    $infoPgto,
+                    "dtEscrCont",
+                    $info->dtescrcont ?? null,
+                    false
+                );
+                $this->dom->addChild(
+                    $infoPgto,
+                    "observ",
+                    $info->observ ?? null,
+                    false
+                );
+                if (!empty($info->retencoes)) {
+                    $retencoes = $this->dom->createElement('retencoes');
+                    $this->dom->addChild(
+                        $retencoes,
                         "vlrBaseIR",
-                        number_format($inir->vlrbaseir, 2, ',', ''),
-                        true
+                        self::format($info->retencoes->vlrbaseir ?? null),
+                        false
                     );
-
                     $this->dom->addChild(
-                        $IR,
+                        $retencoes,
                         "vlrIR",
-                        number_format($inir->vlrir, 2, ',', ''),
-                        true
-                    );
-
-                    $this->dom->addChild(
-                        $IR,
-                        "vlrBaseNIR",
-                        !empty($inir->vlrbasenir) ? number_format($inir->vlrbasenir, 2, ',', '') : null,
+                        self::format($info->retencoes->vlrir ?? null),
                         false
                     );
-
                     $this->dom->addChild(
-                        $IR,
-                        "vlrNIR",
-                        !empty($inir->vlrnir) ? number_format($inir->vlrnir, 2, ',', '') : null,
+                        $retencoes,
+                        "vlrBaseAgreg",
+                        self::format($info->retencoes->vlrbaseagreg ?? null),
                         false
                     );
-
                     $this->dom->addChild(
-                        $IR,
-                        "vlrDepIR",
-                        !empty($inir->vlrdepir) ? number_format($inir->vlrdepir, 2, ',', '') : null,
+                        $retencoes,
+                        "vlrAgreg",
+                        self::format($info->retencoes->vlragreg ?? null),
                         false
-                    );inir
-
-                    $infoPgto->appendChild($IR);
-                
-                }
-
-                if (!empty($infop->csll)) {   
-
-                    $infcsll = $infop->csll;
-
-                    $CSLL = $this->dom->createElement("CSLL");
-
+                    );
                     $this->dom->addChild(
-                        $CSLL,
+                        $retencoes,
                         "vlrBaseCSLL",
-                        number_format($infcsll->vlrbasecsll, 2, ',', ''),
-                        true
+                        self::format($info->retencoes->vlrbasecsll ?? null),
+                        false
                     );
-
                     $this->dom->addChild(
-                        $CSLL,
+                        $retencoes,
                         "vlrCSLL",
-                        number_format($infcsll->vlrcsll, 2, ',', ''),
-                        true
-                    );
-
-                    $this->dom->addChild(
-                        $CSLL,
-                        "vlrBaseNCSLL",
-                        !empty($infcsll->vlrbasencsll) ? number_format($infcsll->vlrbasencsll, 2, ',', '') : null,
+                        self::format($info->retencoes->vlrcsll ?? null),
                         false
                     );
-
                     $this->dom->addChild(
-                        $CSLL,
-                        "vlrNCSLL",
-                        !empty($infcsll->vlrncsll) ? number_format($infcsll->vlrncsll, 2, ',', '') : null,
-                        false
-                    );
-
-                    $this->dom->addChild(
-                        $CSLL,
-                        "vlrDepCSLL",
-                        !empty($infcsll->vlrdepcsll) ? number_format($infcsll->vlrdepcsll, 2, ',', '') : null,
-                        false
-                    );
-
-                    $infoPgto->appendChild($CSLL);
-
-                }
-
-                if (!empty($infop->cofins)) {
-
-                	$infoco = $infop->cofins;
-
-                	$Cofins = $this->dom->createElement("Cofins");
-
-                	$this->dom->addChild(
-                        $Cofins,
+                        $retencoes,
                         "vlrBaseCofins",
-                        number_format($infoco->vlrbasecofins, 2, ',', ''),
-                        true
+                        self::format($info->retencoes->vlrbasecofins ?? null),
+                        false
                     );
-
                     $this->dom->addChild(
-                        $Cofins,
+                        $retencoes,
                         "vlrCofins",
-                        number_format($infoco->vlrcofins, 2, ',', ''),
-                        true
-                    );
-
-                    $this->dom->addChild(
-                        $Cofins,
-                        "vlrBaseNCofins",
-                        !empty($infoco->vlrbasencofins) ? number_format($infoco->vlrbasencofins, 2, ',', '') : null,
+                        self::format($info->retencoes->vlrcofins ?? null),
                         false
                     );
-
                     $this->dom->addChild(
-                        $Cofins,
-                        "vlrNCofins",
-                        !empty($infoco->vlrncofins) ? number_format($infoco->vlrncofins, 2, ',', '') : null,
-                        false
-                    );
-
-                    $this->dom->addChild(
-                        $Cofins,
-                        "vlrDepCofins",
-                        !empty($infoco->vlrdepcofins) ? number_format($infoco->vlrdepcofins, 2, ',', '') : null,
-                        false
-                    );
-
-                    $infoPgto->appendChild($Cofins);
-
-                }
-
-                if (!empty($infop->pp)) {
-
-                	$infopp = $infop->pp;
-
-                	$PP = $this->dom->createElement("PP");
-
-                	$this->dom->addChild(
-                        $PP,
+                        $retencoes,
                         "vlrBasePP",
-                        number_format($infopp->vlrbasepp, 2, ',', ''),
-                        true
+                        self::format($info->retencoes->vlrbasepp ?? null),
+                        false
                     );
-
                     $this->dom->addChild(
-                        $PP,
+                        $retencoes,
                         "vlrPP",
-                        number_format($infopp->vlrpp, 2, ',', ''),
-                        true
-                    );
-
-                    $this->dom->addChild(
-                        $PP,
-                        "vlrBaseNPP",
-                        !empty($infopp->vlrbasenpp) ? number_format($infopp->vlrbasenpp, 2, ',', '') : null,
+                        self::format($info->retencoes->vlrpp ?? null),
                         false
                     );
-
-                    $this->dom->addChild(
-                        $PP,
-                        "vlrNPP",
-                        !empty($infopp->vlrnpp) ? number_format($infopp->vlrnpp, 2, ',', '') : null,
-                        false
-                    );
-
-                    $this->dom->addChild(
-                        $PP,
-                        "vlrDepPP",
-                        !empty($infopp->vlrdeppp) ? number_format($infopp->vlrdeppp, 2, ',', '') : null,
-                        false
-                    );
-
-                    $infoPgto->appendChild($PP);
-
+                    $infoPgto->appendChild($retencoes);
                 }
-
-                if (!empty($infop->fci)) {
-
-                	$infofci = $infop->fci;
-
-                	$FCI = $this->dom->createElement("FCI");
-
-                	$this->dom->addChild(
-                        $FCI,
-                        "perRefPagto",
-                        $infofci->perrefpagto,
-                        true
-                    );
-
-                    $infoPgto->appendChild($FCI);
-
-                }
-
-                if (!empty($infop->scp)) {
-
-                	$infoscp = $infop->scp;
-
-                	$SCP = $this->dom->createElement("SCP");
-
-                	$this->dom->addChild(
-                        $SCP,
-                        "nrInscSCP",
-                        $infoscp->nrinscscp,
-                        true
-                    );
-
-                    $this->dom->addChild(
-                        $SCP,
-                        "percSCP",
-                        $infoscp->percscp,
-                        true
-                    );
-
-                    $infoPgto->appendChild($SCP);
-
-                }
-
-                if (!empty($infop->infoprocret)) {
-
-                	foreach ($infop->infoprocret as $infoprocr) {
-
-                		$infoProcRet = $this->dom->createElement("infoProcRet");
-
-                		$this->dom->addChild(
+                if (!empty($info->infoprocret)) {
+                    foreach ($info->infoprocret as $ret) {
+                        $infoProcRet = $this->dom->createElement('infoProcRet');
+                        $this->dom->addChild(
                             $infoProcRet,
                             "tpProcRet",
-                            $infoprocr->tpprocret,
+                            $ret->tpprocret,
                             true
                         );
-
-                		$this->dom->addChild(
+                        $this->dom->addChild(
                             $infoProcRet,
                             "nrProcRet",
-                            $infoprocr->nrprocret,
+                            $ret->nrprocret,
                             true
                         );
-
                         $this->dom->addChild(
                             $infoProcRet,
                             "codSusp",
-                            !empty($infoprocr->codsusp) ? $infoprocr->codsusp : null,
+                            $ret->codsusp ?? null,
                             false
                         );
-
                         $this->dom->addChild(
                             $infoProcRet,
-                            "nIR",
-                            !empty($infoprocr->nir) ? number_format($infoprocr->nir, 2, ',', '') : null,
+                            "vlrBaseSuspIR",
+                            self::format($ret->vlrbasesuspir ?? null),
                             false
                         );
-
                         $this->dom->addChild(
                             $infoProcRet,
-                            "depIR",
-                            !empty($infoprocr->depir) ? number_format($infoprocr->depir, 2, ',', '') : null,
+                            "vlrNIR",
+                            self::format($ret->vlrnir ?? null),
                             false
                         );
-
                         $this->dom->addChild(
                             $infoProcRet,
-                            "nCSLL",
-                            !empty($infoprocr->ncsll) ? number_format($infoprocr->ncsll, 2, ',', '') : null,
+                            "vlrDepIR",
+                            self::format($ret->vlrdepir ?? null),
                             false
                         );
-
                         $this->dom->addChild(
                             $infoProcRet,
-                            "depCSLL",
-                            !empty($infoprocr->depcsll) ? number_format($infoprocr->depcsll, 2, ',', '') : null,
+                            "vlrBaseSuspCSLL",
+                            self::format($ret->vlrbasesuspcsll ?? null),
                             false
                         );
-
                         $this->dom->addChild(
                             $infoProcRet,
-                            "nCofins",
-                            !empty($infoprocr->ncofins) ? number_format($infoprocr->ncofins, 2, ',', '') : null,
+                            "vlrNCSLL",
+                            self::format($ret->vlrncsll ?? null),
                             false
                         );
-
                         $this->dom->addChild(
                             $infoProcRet,
-                            "depCofins",
-                            !empty($infoprocr->depcofins) ? number_format($infoprocr->depcofins, 2, ',', '') : null,
+                            "vlrDepCSLL",
+                            self::format($ret->vlrdepcsll ?? null),
                             false
                         );
-
                         $this->dom->addChild(
                             $infoProcRet,
-                            "nPP",
-                            !empty($infoprocr->npp) ? number_format($infoprocr->np, 2, ',', '') : null,
+                            "vlrBaseSuspCofins",
+                            self::format($ret->vlrbasesuspcofins ?? null),
                             false
                         );
-
                         $this->dom->addChild(
                             $infoProcRet,
-                            "depPP",
-                            !empty($infoprocr->deppp) ? number_format($infoprocr->deppp, 2, ',', '') : null,
+                            "vlrNCofins",
+                            self::format($ret->vlrncofins ?? null),
                             false
                         );
-
+                        $this->dom->addChild(
+                            $infoProcRet,
+                            "vlrDepCofins",
+                            self::format($ret->vlrdepcofins ?? null),
+                            false
+                        );
+                        $this->dom->addChild(
+                            $infoProcRet,
+                            "vlrBaseSuspPP",
+                            self::format($ret->vlrbasesusppp ?? null),
+                            false
+                        );
+                        $this->dom->addChild(
+                            $infoProcRet,
+                            "vlrNPP",
+                            self::format($ret->vlrnpp ?? null),
+                            false
+                        );
+                        $this->dom->addChild(
+                            $infoProcRet,
+                            "vlrDepPP",
+                            self::format($ret->vlrdeppp ?? null),
+                            false
+                        );
                         $infoPgto->appendChild($infoProcRet);
-
-                	}
-
+                    }
                 }
-
-                if (!empty($infop->infoprocjud)) {
-
-                	$infoprocj = $infop->infoprocjud;
-
-                	$infoProcJud = $this->dom->createElement("infoProcJud");
-
-                	$this->dom->addChild(
+                if (!empty($info->infoprocjud)) {
+                    $jud = $info->infoprocjud;
+                    $infoProcJud = $this->dom->createElement('infoProcJud');
+                    $this->dom->addChild(
                         $infoProcJud,
                         "nrProc",
-                        $infoprocj->nrproc,
+                        $jud->nrproc,
                         true
                     );
-
-                	$this->dom->addChild(
+                    $this->dom->addChild(
                         $infoProcJud,
-                        "indOrigemRecursos",
-                        $infoprocj->indorigemrecursos,
+                        "indOrigRec",
+                        $jud->indorigrec,
                         true
                     );
-
-                	$this->dom->addChild(
+                    $this->dom->addChild(
                         $infoProcJud,
-                        "desc",
-                        !empty($infoprocj->desc) ? $infoprocj->desc : null,
+                        "cnpjOrigRecurso",
+                        $jud->cnpjorigrecurso ?? null,
                         false
                     );
-
-                    if ( !empty($infoprocj->despprocjud)) {
-
-                    	$infodespprocj = $infoprocj->despprocjud;
-
-                    	$despProcJud = $this->dom->createElement("despProcJud");
-
-                    	$this->dom->addChild(
+                    $this->dom->addChild(
+                        $infoProcJud,
+                        "desc",
+                        $jud->desc ?? null,
+                        false
+                    );
+                    if (!empty($jud->despprocjud)) {
+                        $des = $jud->despprocjud;
+                        $despProcJud = $this->dom->createElement('despProcJud');
+                        $this->dom->addChild(
                             $despProcJud,
                             "vlrDespCustas",
-                            number_format($infodespprocj->vlrdespcustas, 2, ',', ''),
+                            self::format($des->vlrdespcustas),
                             true
                         );
-
-                    	$this->dom->addChild(
+                        $this->dom->addChild(
                             $despProcJud,
                             "vlrDespAdvogados",
-                            number_format($infodespprocj->vlrdespadvogados, 2, ',', ''),
+                            self::format($des->vlrdespadvogados),
                             true
                         );
-
-                        if (!empty($infodespprocj->ideadv)) {
-
-                        	foreach ($infodespprocj->ideadv as $infoadv) {
-
-                        		$ideAdv = $this->dom->createElement("ideAdv");
-
-                        		$this->dom->addChild(
-                                    $ideAdv,
-                                    "tpInscAdv",
-                                    $infoadv->tpinscadv,
-                                    true
-                                );
-
-                        		$this->dom->addChild(
-                                    $ideAdv,
-                                    "nrInscAdv",
-                                    $infoadv->nrinscadv,
-                                    true
-                                );
-
-                        		$this->dom->addChild(
-                                    $ideAdv,
-                                    "vlrAdv",
-                                    number_format($infoadv->vlradv, 2, ',', ''),
-                                    true
-                                );
-
-                                $despProcJud->appendChild($ideAdv);
-
-                        	}
-
+                        foreach ($des->ideadv as $adv) {
+                            $ideAdv = $this->dom->createElement('ideAdv');
+                            $this->dom->addChild(
+                                $ideAdv,
+                                "tpInscAdv",
+                                $adv->tpinscadv,
+                                true
+                            );
+                            $this->dom->addChild(
+                                $ideAdv,
+                                "nrInscAdv",
+                                $adv->nrinscadv,
+                                true
+                            );
+                            $this->dom->addChild(
+                                $ideAdv,
+                                "vlrAdv",
+                                self::format($adv->vlradv ?? null),
+                                false
+                            );
+                            $despProcJud->appendChild($ideAdv);
                         }
-
                         $infoProcJud->appendChild($despProcJud);
-
                     }
-
-                    if (!empty($infoprocjud->origemrec)) {
-
-                    	$infoorirec = $infoprocjud->origemrec;
-
-                    	$origemrec = $this->dom->createElement("origemRec");
-
-                    	$this->dom->addChild(
-                            $origemRec,
-                            "cnpjOrigRecurso",
-                            $infoorirec->cnpjorigrecurso,
-                            true
-                        );
-
-                        $infoProcJud->appendChild($origemRec);
-
-                    }
-                    
                     $infoPgto->appendChild($infoProcJud);
-
                 }
-
+                if (!empty($info->infopgtoext)) {
+                    $ext = $info->infopgtoext;
+                    $infoPgtoExt = $this->dom->createElement('infoPgtoExt');
+                    $this->dom->addChild(
+                        $infoPgtoExt,
+                        "indNIF",
+                        $ext->indnif,
+                        true
+                    );
+                    $this->dom->addChild(
+                        $infoPgtoExt,
+                        "nifBenef",
+                        $ext->nifbenef ?? null,
+                        false
+                    );
+                    $this->dom->addChild(
+                        $infoPgtoExt,
+                        "relFontPg",
+                        $ext->relfontpg,
+                        true
+                    );
+                    $this->dom->addChild(
+                        $infoPgtoExt,
+                        "frmTribut",
+                        $ext->frmtribut,
+                        true
+                    );
+                    if (!empty($ext->endext)) {
+                        $end = $ext->endext;
+                        $endExt = $this->dom->createElement('endExt');
+                        $this->dom->addChild(
+                            $endExt,
+                            "dscLograd",
+                            $end->dsclograd ?? null,
+                            false
+                        );
+                        $this->dom->addChild(
+                            $endExt,
+                            "nrLograd",
+                            $end->nrlograd ?? null,
+                            false
+                        );
+                        $this->dom->addChild(
+                            $endExt,
+                            "complem",
+                            $end->complem ?? null,
+                            false
+                        );
+                        $this->dom->addChild(
+                            $endExt,
+                            "bairro",
+                            $end->bairro ?? null,
+                            false
+                        );
+                        $this->dom->addChild(
+                            $endExt,
+                            "cidade",
+                            $end->cidade ?? null,
+                            false
+                        );
+                        $this->dom->addChild(
+                            $endExt,
+                            "estado",
+                            $end->estado ?? null,
+                            false
+                        );
+                        $this->dom->addChild(
+                            $endExt,
+                            "codPostal",
+                            $end->codpostal ?? null,
+                            false
+                        );
+                        $this->dom->addChild(
+                            $endExt,
+                            "telef",
+                            $end->telef ?? null,
+                            false
+                        );
+                        $infoPgtoExt->appendChild($endExt);
+                    }
+                    $infoPgto->appendChild($infoPgtoExt);
+                }
                 $idePgto->appendChild($infoPgto);
-
-       	    }
-
-       	    if (!empty($infop->infopgtoext)) {
-       	    	
-       	    	$infopext = $infop->infopgtoext;
-
-       	        $infoPgtoExt = $this->dom->createElement("infoPgtoExt");
-
-       	        $infoendext = $infopext->endext;
-
-       	        $endExt = $this->dom->createElement("endExt");
-
-       	        $this->dom->addChild(
-                    $endExt,
-                    "dscLograd",
-                    $infoendext->dsclograd,
-                    true
-                );
-
-                $this->dom->addChild(
-                    $endExt,
-                    "nrLograd",
-                    !empty($infoendext->nrlograd) ? $infoendext->nrlograd : null,
-                    false
-                );
-
-                $this->dom->addChild(
-                    $endExt,
-                    "complem",
-                    !empty($infoendext->complem) ? $infoendext->complem : null,
-                    false
-                );
-
-                $this->dom->addChild(
-                    $endExt,
-                    "bairro",
-                    !empty($infoendext->bairro) ? $infoendext->bairro : null,
-                    false
-                );
-
-                $this->dom->addChild(
-                    $endExt,
-                    "cidade",
-                    !empty($infoendext->cidade) ? $infoendext->cidade : null,
-                    false
-                );
-
-                $this->dom->addChild(
-                    $endExt,
-                    "estado",
-                    !empty($infoendext->estado) ? $infoendext->estado : null,
-                    false
-                );
-
-                $this->dom->addChild(
-                    $endExt,
-                    "codPostal",
-                    !empty($infoendext->codpostal) ? $infoendext->codpostal : null,
-                    false
-                );
-
-                $this->dom->addChild(
-                    $endExt,
-                    "telef",
-                    !empty($infoendext->telef) ? $infoendext->telef : null,
-                    false
-                );
-
-                $infisext = $infopext->infofiscal;
-
-                $infoFiscal = $this->dom->createElement("infoFiscal");
-
-                $this->dom->addChild(
-                    $infoFiscal,
-                    "indNIF",
-                    $infisext->indnif,
-                    true
-                );
-
-                $this->dom->addChild(
-                    $infoFiscal,
-                    "nifBenef",
-                    !empty($infisext->nifbenef) ? $infisext->nifbenef : null,
-                    false
-                );
-
-                $this->dom->addChild(
-                    $infoFiscal,
-                    "relFontPg",
-                    $infisext->relfontpg,
-                    true
-                );
-
-                $this->dom->addChild(
-                   $infoFiscal,
-                    "frmTribut",
-                    $infisext->frmtribut,
-                    true
-                );
-
-                $infoPgtoExt->appendChild($endExt);
-
-                $infoPgtoExt->appendChild($infoFiscal);
-
-                $infoPgto->appendChild($infoPgtoExt);
-
-       	    }
-
-       	    $ideBenef->appendChild($idePgto);
-        
+            }
+            $ideBenef->appendChild($idePgto);
         }
-
         $ideEstab->appendChild($ideBenef);
-
-        $this->node->appendChild($ideBenef);
-
+        $this->node->appendChild($ideEstab);
         $this->reinf->appendChild($this->node);
-
+        //$this->xml = $this->dom->saveXML($this->reinf);
         $this->sign($this->evtTag);
-
-	}
-
+    }
 }
-
-?>

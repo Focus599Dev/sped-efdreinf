@@ -11,7 +11,7 @@ use stdClass;
 
 
 class EvtRetCons extends Parse {
-
+	
 	public function convert(){
 
 		$this->obParsed->config = new stdClass();

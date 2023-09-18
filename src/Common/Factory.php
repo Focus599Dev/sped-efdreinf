@@ -156,7 +156,7 @@ abstract class Factory
         $this->nrInsc = $stdConf->empregador->nrInsc;
         $this->nmRazao = $stdConf->empregador->nmRazao;
         $this->evtid = $std->idEvento;
-
+        
         $this->layoutStr = $this->strLayoutVer($this->layout);
         $this->certificate = $certificate;
         $this->evtTag = $params->evtTag;
@@ -205,25 +205,7 @@ abstract class Factory
         }
         return substr($str, 0, -1);
     }
-
-    /**
-     * Change properties names of stdClass to lower case
-     * @param stdClass $data
-     * @return stdClass
-     */
-    protected static function propertiesToLower(stdClass $data)
-    {
-        $properties = get_object_vars($data);
-        $clone = new stdClass();
-        foreach ($properties as $key => $value) {
-            if ($value instanceof stdClass) {
-                $value = self::propertiesToLower($value);
-            }
-            $nk = strtolower($key);
-            $clone->{$nk} = $value;
-        }
-        return $clone;
-    }
+    
 
     /**
      * Validation json data from json Schema
@@ -463,5 +445,32 @@ abstract class Factory
         }
 
         $this->xml = $xml;
+    }
+
+     /**
+     * Change properties names of stdClass to lower case
+     * @param stdClass $data
+     * @return stdClass
+     */
+    public static function propertiesToLower(stdClass $data)
+    {
+        $properties = get_object_vars($data);
+        $clone = new stdClass();
+        foreach ($properties as $key => $value) {
+            if ($value instanceof stdClass) {
+                $value = self::propertiesToLower($value);
+            } elseif (is_array($value)) {
+                foreach ($value as $k => $val) {
+                    if ($val instanceof stdClass) {
+                        $val = self::propertiesToLower($val);
+                    }
+                    $k = strtolower($k);
+                    $value[$k] = $val;
+                }
+            }
+            $nk = strtolower($key);
+            $clone->{$nk} = $value;
+        }
+        return $clone;
     }
 }

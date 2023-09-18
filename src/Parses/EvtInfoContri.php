@@ -22,8 +22,17 @@ use stdClass;
 
 class EvtInfoContri extends Parse{
 
-    public function convert(){
+	// public function __construct($txt){
 
+	// 	parent::__construct($txt);
+	
+    //     $this->eventoVersion = '2_01_02';
+
+    //     $this->serviceVersion = '1_05_01';
+    // }
+
+    public function convert(){
+		
     	$this->obParsed->config = new stdClass();
 
     	$this->obParsed->config->tpAmb = $this->ob[1][1];

@@ -21,6 +21,15 @@ use NFePHP\EFDReinf\Parses\Parse;
 use stdClass;
 
 class EvtAssocDespRep extends Parse{
+    
+    public function __construct($txt){
+
+		parent::__construct($txt);
+	
+        $this->eventoVersion = '2_01_02';
+
+        $this->serviceVersion = '1_05_01';
+    }
 
     public function convert(){
 

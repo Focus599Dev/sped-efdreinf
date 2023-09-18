@@ -21,6 +21,7 @@ use NFePHP\EFDReinf\Parses\Parse;
 use stdClass;
 
 class EvtCPRB extends Parse{
+    
 
     public function convert(){
 

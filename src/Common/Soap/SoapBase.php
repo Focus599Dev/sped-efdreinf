@@ -20,8 +20,18 @@ use Psr\Log\LoggerInterface;
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      http://github.com/nfephp-org/sped-nfse for the canonical source repository
  */
-abstract class SoapBase implements SoapInterface
+abstract class SoapBase
 {
+
+    //constants
+    const SSL_DEFAULT = 0; //default
+    const SSL_TLSV1 = 1; //TLSv1
+    const SSL_SSLV2 = 2; //SSLv2
+    const SSL_SSLV3 = 3; //SSLv3
+    const SSL_TLSV1_0 = 4; //TLSv1.0
+    const SSL_TLSV1_1 = 5; //TLSv1.1
+    const SSL_TLSV1_2 = 6; //TLSv1.2
+
     /**
      * @var int
      */
@@ -326,68 +336,11 @@ abstract class SoapBase implements SoapInterface
      * @param int $timesecs
      * @return int
      */
-    public function timeout($timesecs)
+    public function timeout(int $timesecs): int
     {
         return $this->soaptimeout = $timesecs;
     }
-
-    /**
-     * Set security protocol
-     * @param int $protocol
-     * @return int
-     */
-    public function protocol($protocol = self::SSL_DEFAULT)
-    {
-        return $this->soapprotocol = $protocol;
-    }
-
-    /**
-     * Set prefixes
-     * @param array $prefixes
-     * @return string[]
-     */
-    public function setSoapPrefix($prefixes = [])
-    {
-        return $this->prefixes = $prefixes;
-    }
-
-    /**
-     * Set proxy parameters
-     * @param string $ip
-     * @param int    $port
-     * @param string $user
-     * @param string $password
-     * @return void
-     */
-    public function proxy($ip, $port, $user, $password)
-    {
-        $this->proxyIP = $ip;
-        $this->proxyPort = $port;
-        $this->proxyUser = $user;
-        $this->proxyPass = $password;
-    }
-
-    /**
-     * @param string $url
-     * @param string $operation
-     * @param string $action
-     * @param int $soapver
-     * @param array $parameters
-     * @param array $namespaces
-     * @param string $request
-     * @param null $soapheader
-     * @return mixed
-     */
-    abstract public function send(
-        $url,
-        $operation = '',
-        $action = '',
-        $soapver = SOAP_1_2,
-        $parameters = [],
-        $namespaces = [],
-        $request = '',
-        $soapheader = null
-    );
+   
 
     /**
      * Mount soap envelope
@@ -401,7 +354,7 @@ abstract class SoapBase implements SoapInterface
         $request,
         $namespaces,
         $soapVer = SOAP_1_2,
-        $header = nul
+        $header = null
     ) {
         $prefix = $this->prefixes[$soapVer];
         $envelopeAttributes = $this->getStringAttributes($namespaces);
@@ -633,4 +586,60 @@ abstract class SoapBase implements SoapInterface
             );
         }
     }
+
+     /**
+     * Set security protocol
+     * @param int $protocol
+     * @return int
+     */
+    public function protocol(int $protocol = self::SSL_DEFAULT): int
+    {
+        return $this->soapprotocol = $protocol;
+    }
+
+    /**
+     * Set prefixes
+     * @param array $prefixes
+     * @return array
+     */
+    public function setSoapPrefix(string $prefixes): string
+    {
+        return $this->prefixes = $prefixes;
+    }
+
+    /**
+     * Set proxy parameters
+     * @param string $ip
+     * @param int $port
+     * @param string $user
+     * @param string $password
+     * @return void
+     */
+    public function proxy($ip, $port, $user, $password)
+    {
+        $this->proxyIP = $ip;
+        $this->proxyPort = $port;
+        $this->proxyUser = $user;
+        $this->proxyPass = $password;
+    }
+
+    /**
+     * Set proxy into cURL parameters
+     * @param resource $oCurl
+     * @return void
+     */
+    protected function setCurlProxy(&$oCurl)
+    {
+        if ($this->proxyIP != '') {
+            curl_setopt($oCurl, CURLOPT_HTTPPROXYTUNNEL, 1);
+            curl_setopt($oCurl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+            curl_setopt($oCurl, CURLOPT_PROXY, $this->proxyIP.':'.$this->proxyPort);
+            if ($this->proxyUser != '') {
+                curl_setopt($oCurl, CURLOPT_PROXYUSERPWD, $this->proxyUser.':'.$this->proxyPass);
+                curl_setopt($oCurl, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
+            }
+        }
+    }
+
+    
 }

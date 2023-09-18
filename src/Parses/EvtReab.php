@@ -12,6 +12,15 @@ use stdClass;
 
 class EvtReab extends Parse{
 
+	public function __construct($txt){
+
+		parent::__construct($txt);
+    	
+		$this->eventoVersion = '1_05_01';
+
+        $this->serviceVersion = '1_05_01';
+    }
+
 	public function convert(){
 
 		$this->obParsed->config = new stdClass();
