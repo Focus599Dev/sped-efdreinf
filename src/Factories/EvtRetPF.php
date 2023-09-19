@@ -109,13 +109,13 @@ class EvtRetPF extends Factory implements FactoryInterface
         $this->dom->addChild(
             $ideEstab,
             "tpInscEstab",
-            $this->std->tpinscestab,
+            $this->std->ideestab->tpinscestab,
             true
         );
         $this->dom->addChild(
             $ideEstab,
             "nrInscEstab",
-            $this->std->nrinscestab,
+            $this->std->ideestab->nrinscestab,
             true
         );
         $ideBenef = $this->dom->createElement('ideBenef');
@@ -138,6 +138,7 @@ class EvtRetPF extends Factory implements FactoryInterface
             false
         );
         if (!empty($this->std->idedep)) {
+
             foreach ($this->std->idedep as $dep) {
                 $ideDep = $this->dom->createElement('ideDep');
                 $this->dom->addChild(

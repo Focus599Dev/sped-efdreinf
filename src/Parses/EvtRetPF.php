@@ -112,7 +112,7 @@ class EvtRetPF extends Parse{
 
 				$aux->descrDep = $auxOb[3];
 
-				$this->obParsed->idedep = $aux;
+				$this->obParsed->idedep[] = $aux;
 
 			} else if ($cabecario == 'IDEPGTO'){
 

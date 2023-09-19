@@ -139,25 +139,25 @@ class EvtAqProd extends Factory implements FactoryInterface
             $this->dom->addChild(
                 $detaq,
                 "vlrBruto",
-                number_format($det->vlrbruto, 2, ',', ''),
+                !empty($det->vlrbruto) ? number_format($det->vlrbruto, 2, ',', ''): null,
                 true
             );
             $this->dom->addChild(
                 $detaq,
                 "vlrCPDescPR",
-                number_format($det->vlrcpdescpr, 2, ',', ''),
+                !empty($det->vlrcpdescpr) ? number_format($det->vlrcpdescpr, 2, ',', ''): null,
                 true
             );
             $this->dom->addChild(
                 $detaq,
                 "vlrRatDescPR",
-                number_format($det->vlrratdescpr, 2, ',', ''),
+                !empty($det->vlrratdescpr) ? number_format($det->vlrratdescpr, 2, ',', ''): null,
                 true
             );
             $this->dom->addChild(
                 $detaq,
                 "vlrSenarDesc",
-                number_format($det->vlrsenardesc, 2, ',', ''),
+                !empty($det->vlrsenardesc) ? number_format($det->vlrsenardesc, 2, ',', ''): null,
                 true
             );
             if (!empty($det->infoprocjud)) {
