@@ -104,13 +104,13 @@ class EvtBenefNId extends Factory implements FactoryInterface
         $this->dom->addChild(
             $ideEstab,
             "tpInscEstab",
-            $this->std->tpinscestab ?? '1',
+            $this->std->ideestab->tpinscestab,
             true
         );
         $this->dom->addChild(
             $ideEstab,
             "nrInscEstab",
-            $this->std->nrinscestab,
+            $this->std->ideestab->nrinscestab,
             true
         );
         $this->dom->addChild(

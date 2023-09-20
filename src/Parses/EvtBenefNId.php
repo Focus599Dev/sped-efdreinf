@@ -50,7 +50,7 @@ class EvtBenefNId extends Parse{
 
 		$this->obParsed->ideEstab->nrInscEstab = $this->ob[1][10];
 		
-		$this->obParsed->ideEstab->natJur = $this->ob[1][11];
+		$this->obParsed->ideEstab->ideevtadic = $this->ob[1][11];
 
 		$index = 2;
 
@@ -78,7 +78,7 @@ class EvtBenefNId extends Parse{
 
                 $aux->natRend =  $auxOb[1];
 
-                $this->obParsed->ideestab[] = $aux;
+                $this->obParsed->idenat[] = $aux;
 
                 $lastIdeNat =  $aux;
 

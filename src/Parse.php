@@ -42,6 +42,7 @@ class Parse{
         'evtbenefnid' => Parses\EvtBenefNId::class,
         'evtreab' => Parses\EvtReab::class,
         'evtfech' => Parses\EvtFech::class,
+        'evtfech4000' => Parses\EvtFech4000::class,
         'evtexclusao' => Parses\EvtExclusao::class,
         'evttotal' => Parses\EvtTotal::class,
         'evtret' => Parses\EvtRet::class,

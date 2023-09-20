@@ -42,6 +42,7 @@ class Event
         'evtbenefnid' => Factories\EvtBenefNId::class,
         'evtreab' => Factories\EvtReab::class,
         'evtfech' => Factories\EvtFech::class,
+        'evtfech4000' => Factories\EvtFech4000::class,
         'evtexclusao' => Factories\EvtExclusao::class,
         'evttotal' => Factories\EvtExclusao::class,
         'evtret' => Factories\EvtRet::class,

@@ -86,7 +86,7 @@ class EvtRetPF extends Parse{
 
 				}
 
-				$aux->cnpjBenef = $auxOb[1];
+				$aux->cpfBenef = $auxOb[1];
 
 				$aux->nmBenef = $auxOb[2];
 
@@ -171,7 +171,6 @@ class EvtRetPF extends Parse{
 				$aux->dtEscrCont = $auxOb[13];
 
 				$aux->observ = $auxOb[14];
-
 
 				$lastIdePgto->infopgto[] = $aux;
 
