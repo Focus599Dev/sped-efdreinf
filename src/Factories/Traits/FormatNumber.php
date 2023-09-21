@@ -12,12 +12,22 @@ trait FormatNumber
      */
     protected static function format($value = null, $decimals = 2, $separator = ',')
     {
+
         if ($value === null) {
             return null;
         }
+        
         if (empty($value)) {
             return null;
         }
-        return number_format($value, $decimals, $separator, '');
+
+        try {
+            
+            return number_format($value, $decimals, $separator, '');
+
+        } catch (\Exception $e) {
+            
+            return $value;
+        }
     }
 }

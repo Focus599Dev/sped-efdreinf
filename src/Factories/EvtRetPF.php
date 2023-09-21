@@ -489,28 +489,33 @@ class EvtRetPF extends Factory implements FactoryInterface
                             self::format($dpj->vlrdespadvogados),
                             true
                         );
-                        foreach ($dpj->ideadv as $adv) {
-                            $ideAdv = $this->dom->createElement('ideAdv');
-                            $this->dom->addChild(
-                                $ideAdv,
-                                "tpInscAdv",
-                                $adv->tpinscadv,
-                                true
-                            );
-                            $this->dom->addChild(
-                                $ideAdv,
-                                "nrInscAdv",
-                                $adv->nrinscadv,
-                                true
-                            );
-                            $this->dom->addChild(
-                                $ideAdv,
-                                "vlrAdv",
-                                self::format($adv->vlradv ?? null),
-                                false
-                            );
-                            $despProcJud->appendChild($ideAdv);
+                        
+                        if (!empty($dpj->ideadv)) {
+
+                            foreach ($dpj->ideadv as $adv) {
+                                $ideAdv = $this->dom->createElement('ideAdv');
+                                $this->dom->addChild(
+                                    $ideAdv,
+                                    "tpInscAdv",
+                                    $adv->tpinscadv,
+                                    true
+                                );
+                                $this->dom->addChild(
+                                    $ideAdv,
+                                    "nrInscAdv",
+                                    $adv->nrinscadv,
+                                    true
+                                );
+                                $this->dom->addChild(
+                                    $ideAdv,
+                                    "vlrAdv",
+                                    self::format($adv->vlradv ?? null),
+                                    false
+                                );
+                                $despProcJud->appendChild($ideAdv);
+                            }
                         }
+                        
                         $infoRRA->appendChild($despProcJud);
                     }
                     $infoPgto->appendChild($infoRRA);

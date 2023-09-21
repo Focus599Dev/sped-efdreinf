@@ -308,7 +308,7 @@ class EvtRetPF extends Parse{
 
 				if (!isset($lastInfoPgto->infoRRA)){
 
-					$lastInfoPgto->infoRRA = array();
+					$lastInfoPgto->infoRRA = new stdClass();
 
 				}
 
@@ -336,7 +336,7 @@ class EvtRetPF extends Parse{
 
 				}
 				
-				$lastInfoPgto->infoRRA[] = $aux;
+				$lastInfoPgto->infoRRA = $aux;
 			
 			}  else if ($cabecario == 'IDEADVRRA'){
 
@@ -353,6 +353,8 @@ class EvtRetPF extends Parse{
 				$aux->nrInscAdv = $auxOb[2];
 
 				$aux->vlrAdv = $auxOb[3];
+
+				$lastDespprocjud->ideadv [] = $aux;
 			
 			} else if ($cabecario == 'INFOPROCJUD'){
 
@@ -402,9 +404,9 @@ class EvtRetPF extends Parse{
 
 				$aux = new stdClass();
 
-				if(!isset($lastIdePgto->infoPgto->infoPgtoExt)){
+				if(!isset($lastInfoPgto->infoPgtoExt)){
 
-					$lastIdePgto->infoPgto->infoPgtoExt = new stdClass();
+					$lastInfoPgto->infoPgtoExt = new stdClass();
 
 				}
 
@@ -416,7 +418,7 @@ class EvtRetPF extends Parse{
 
 				$aux->frmTribut = $auxOb[4];
 
-				if ($$auxOb[5] ||$auxOb[6] || $auxOb[7] || $auxOb[8] || $auxOb[9] || $auxOb[10]){
+				if ($auxOb[5] ||$auxOb[6] || $auxOb[7] || $auxOb[8] || $auxOb[9] || $auxOb[10]){
 					$aux->endExt = new stdClass();
 
 					$aux->endExt->dscLograd = $auxOb[5];
@@ -437,7 +439,7 @@ class EvtRetPF extends Parse{
 
 				}
 
-				$lastIdePgto->infoPgto->infoPgtoExt = $aux;
+				$lastInfoPgto->infoPgtoExt = $aux;
 
 			}
 
