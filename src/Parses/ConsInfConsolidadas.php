@@ -22,14 +22,14 @@ use stdClass;
 
 class ConsInfConsolidadas extends Parse{
 
-	public function __construct($txt){
+	// public function __construct($txt){
 
-		parent::__construct($txt);
+	// 	parent::__construct($txt);
     	
-		$this->eventoVersion = '1_05_01';
+	// 	$this->eventoVersion = '1_05_01';
 
-        $this->serviceVersion = '1_05_01';
-    }
+    //     $this->serviceVersion = '1_05_01';
+    // }
 
     public function convert(){
 
@@ -51,7 +51,7 @@ class ConsInfConsolidadas extends Parse{
 
     	$this->obParsed->config->transmissor = $this->obParsed->config->empregador;
 
-    	$this->obParsed->recibo = $this->ob[1][0];
+    	$this->obParsed->numeroprotocolofechamento = $this->ob[1][0];
 
     	$this->obParsed->config->empregador->nmRazao  = $this->ob[1][6];
 

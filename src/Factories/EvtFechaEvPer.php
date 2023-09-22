@@ -160,22 +160,22 @@ class EvtFechaEvPer extends Factory implements FactoryInterface
             true
         );
         //estes campos não existem na versão 2.1.1
-        if ($this->config->eventoVersion === '1_05_01') {
-            if (!empty($this->std->evtpgtos)) {
-                $this->dom->addChild(
-                    $infoFech,
-                    "evtPgtos",
-                    $this->std->evtpgtos,
-                    true
-                );
-            }
-            $this->dom->addChild(
-                $infoFech,
-                "compSemMovto",
-                !empty($this->std->compsemmovto) ? $this->std->compsemmovto : null,
-                false
-            );
-        }
+        // if ($this->config->eventoVersion === '1_05_01') {
+        //     if (!empty($this->std->evtpgtos)) {
+        //         $this->dom->addChild(
+        //             $infoFech,
+        //             "evtPgtos",
+        //             $this->std->evtpgtos,
+        //             true
+        //         );
+        //     }
+        //     $this->dom->addChild(
+        //         $infoFech,
+        //         "compSemMovto",
+        //         !empty($this->std->compsemmovto) ? $this->std->compsemmovto : null,
+        //         false
+        //     );
+        // }
         $this->node->appendChild($infoFech);
         $this->reinf->appendChild($this->node);
         //$this->xml = $this->dom->saveXML($this->reinf);
