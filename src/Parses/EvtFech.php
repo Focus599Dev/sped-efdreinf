@@ -13,14 +13,14 @@ use stdClass;
 
 class EvtFech extends Parse{
 
-	public function __construct($txt){
+	// public function __construct($txt){
 
-		parent::__construct($txt);
+	// 	parent::__construct($txt);
 	
-        $this->eventoVersion = '2_01_02';
+    //     $this->eventoVersion = '2_01_02';
 
-        $this->serviceVersion = '1_05_01';
-    }
+    //     $this->serviceVersion = '1_05_01';
+    // }
 
 	public function convert(){
 

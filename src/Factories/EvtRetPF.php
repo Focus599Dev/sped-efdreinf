@@ -436,6 +436,7 @@ class EvtRetPF extends Factory implements FactoryInterface
                 }
 
                 if (!empty($info->inforra)) {
+                    
                     $rra = $info->inforra;
                     $infoRRA = $this->dom->createElement('infoRRA');
                     $this->dom->addChild(
@@ -515,7 +516,7 @@ class EvtRetPF extends Factory implements FactoryInterface
                                 $despProcJud->appendChild($ideAdv);
                             }
                         }
-                        
+
                         $infoRRA->appendChild($despProcJud);
                     }
                     $infoPgto->appendChild($infoRRA);
