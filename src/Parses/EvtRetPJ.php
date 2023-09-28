@@ -261,9 +261,9 @@ class EvtRetPJ extends Parse{
 
 				$aux = new stdClass();
 
-				if(!isset($lastIdePgto->infoPgto->infoPgtoExt)){
+				if(!isset($lastInfoPgto->infoPgtoExt)){
 
-					$lastIdePgto->infoPgto->infoPgtoExt = new stdClass();
+					$lastInfoPgto->infoPgtoExt = new stdClass();
 
 				}
 
@@ -271,9 +271,11 @@ class EvtRetPJ extends Parse{
 
 				$aux->nifBenef = $auxOb[2];
 
-				$aux->frmTribut = $auxOb[3];
+				$aux->relFontPg = $auxOb[3];
 
-				if ($$auxOb[4] ||$auxOb[5] || $auxOb[6] || $auxOb[7] || $auxOb[8] || $auxOb[9]){
+				$aux->frmTribut = $auxOb[4];
+
+				if ($auxOb[5] || $auxOb[6] || $auxOb[7] || $auxOb[8] || $auxOb[9]){
 					$aux->endExt = new stdClass();
 
 					$aux->endExt->dscLograd = $auxOb[5];
@@ -294,15 +296,15 @@ class EvtRetPJ extends Parse{
 
 				}
 
-				$lastIdePgto->infoPgto->infoPgtoExt = $aux;
+				$lastInfoPgto->infoPgtoExt = $aux;
 
 			}  else if ($cabecario == 'IDEOPSAUDE'){
 
 				$aux = new stdClass();
 
-				if(!isset($lastIdePgto->infoPgto->ideOpSaude)){
+				if(!isset($lastInfoPgto->ideOpSaude)){
 
-					$lastIdePgto->infoPgto->ideOpSaude = array();
+					$lastInfoPgto->ideOpSaude = array();
 
 				}
 
@@ -312,7 +314,7 @@ class EvtRetPJ extends Parse{
 
 				$aux->vlrSaude = $auxOb[3];
 
-				$lastIdePgto->infoPgto->ideOpSaude = $aux;
+				$lastInfoPgto->ideOpSaude = $aux;
 
 				$lastideOpSaude = $aux;
 			} else if ($cabecario == 'INFOREEMB'){
