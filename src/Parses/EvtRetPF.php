@@ -414,28 +414,28 @@ class EvtRetPF extends Parse{
 
 				$aux->nifBenef = $auxOb[2];
 
-				$aux->relFontPg = $auxOb[3];
+				// $aux->relFontPg = $auxOb[3];
 
-				$aux->frmTribut = $auxOb[4];
+				$aux->frmTribut = $auxOb[3];
 
 				if ($auxOb[5] ||$auxOb[6] || $auxOb[7] || $auxOb[8] || $auxOb[9] || $auxOb[10]){
 					$aux->endExt = new stdClass();
 
-					$aux->endExt->dscLograd = $auxOb[5];
+					$aux->endExt->dscLograd = $auxOb[4];
 					
-					$aux->endExt->nrLograd = $auxOb[6];
+					$aux->endExt->nrLograd = $auxOb[5];
 
-					$aux->endExt->complem = $auxOb[7];
+					$aux->endExt->complem = $auxOb[6];
 
-					$aux->endExt->bairro = $auxOb[8];
+					$aux->endExt->bairro = $auxOb[7];
 
-					$aux->endExt->cidade = $auxOb[9];
+					$aux->endExt->cidade = $auxOb[8];
 
-					$aux->endExt->estado = $auxOb[10];
+					$aux->endExt->estado = $auxOb[9];
 
-					$aux->endExt->codPostal = $auxOb[11];
+					$aux->endExt->codPostal = $auxOb[10];
 					
-					$aux->endExt->telef = $auxOb[12];
+					$aux->endExt->telef = $auxOb[11];
 
 				}
 
