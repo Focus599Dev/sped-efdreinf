@@ -264,7 +264,7 @@ class EvtRetPF extends Factory implements FactoryInterface
                     false
                 );
 
-                if (!empty($this->detded)) {
+                if (!empty($info->detded)) {
                     foreach ($info->detded as $ded) {
                         $detDed = $this->dom->createElement('detDed');
                         $this->dom->addChild(
@@ -317,7 +317,7 @@ class EvtRetPF extends Factory implements FactoryInterface
                     }
                 }
 
-                if (!empty($this->rendisento)) {
+                if (!empty($info->rendisento)) {
                     foreach ($info->rendisento as $isento) {
                         $rendIsento = $this->dom->createElement('rendIsento');
                         $this->dom->addChild(
@@ -348,7 +348,7 @@ class EvtRetPF extends Factory implements FactoryInterface
                     }
                 }
 
-                if (!empty($this->infoprocret)) {
+                if (!empty($info->infoprocret)) {
                     foreach ($info->infoprocret as $ret) {
                         $infoProcRet = $this->dom->createElement('infoProcRet');
                         $this->dom->addChild(
