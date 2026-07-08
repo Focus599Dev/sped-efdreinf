@@ -14,6 +14,7 @@ namespace NFePHP\EFDReinf;
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
  * @link      http://github.com/nfephp-org/sped-esocial for the canonical source repository
  */
+
 use stdClass;
 use NFePHP\Common\Validator;
 use NFePHP\Common\Certificate;
@@ -40,13 +41,13 @@ class Tools extends ToolsBase
     const CONSULTA_R2099 = 11;
     const CONSULTA_R3010 = 12;
     const CONSULTA_FECHAMENTO = 14;
-   
+
     public function __construct($config, Certificate $certificate = null)
     {
         parent::__construct($config, $certificate);
     }
-    
-    
+
+
     /**
      * Run EFD-REINF Query
      * @param $mod
@@ -59,7 +60,7 @@ class Tools extends ToolsBase
             //converte os nomes das propriedades do stdClass para caixa baixa
             $std = Factory::propertiesToLower($std);
         }
-        
+
         switch ($mod) {
             case 1:
                 $evt = 0;
@@ -122,9 +123,9 @@ class Tools extends ToolsBase
         $this->lastResponse = $this->sendRequest($request);
         return $this->lastResponse;
     }
-    
 
-     /**
+
+    /**
      * Consultation of consolidated information
      * @param stdClass $std
      * @return string
@@ -320,7 +321,7 @@ class Tools extends ToolsBase
         if ($this->tpInsc !== 1) {
             throw new \InvalidArgumentException(
                 "Somente com CNPJ essa consulta pode ser realizada."
-                . " Seu config indica um CPF."
+                    . " Seu config indica um CPF."
             );
         }
         $this->method = "ConsultaReciboEvento{$evt}";
@@ -363,7 +364,7 @@ class Tools extends ToolsBase
         if ($this->tpInsc !== 1) {
             throw new \InvalidArgumentException(
                 "Somente com CNPJ essa consulta pode ser realizada."
-                . " Seu config indica um CPF."
+                    . " Seu config indica um CPF."
             );
         }
         $this->method = "ConsultaReciboEvento{$evt}";
@@ -488,7 +489,7 @@ class Tools extends ToolsBase
         if ($this->tpInsc !== 1) {
             throw new \InvalidArgumentException(
                 "Somente com CNPJ essa consulta pode ser realizada."
-                . " Seu config indica um CPF."
+                    . " Seu config indica um CPF."
             );
         }
         $this->method = "ConsultaReciboEvento{$evt}";
@@ -504,7 +505,7 @@ class Tools extends ToolsBase
             . "</sped:{$this->method}>";
         return $request;
     }
-    
+
     /**
      * Send batch of events
      * @param array $eventos
@@ -517,13 +518,13 @@ class Tools extends ToolsBase
         }
         $xml = "";
         $nEvt = count($eventos);
-        
+
         if ($nEvt > 100) {
             throw ProcessException::wrongArgument(2000, $nEvt);
         }
-      
+
         $this->method = "ReceberLoteEventos";
-        
+
         $this->action = "http://sped.fazenda.gov.br/RecepcaoLoteReinf/ReceberLoteEventos";
 
         $xml = "";
@@ -531,7 +532,7 @@ class Tools extends ToolsBase
         $request = '';
 
         foreach ($eventos as $evento) {
-            
+
             if (!is_a($evento, '\NFePHP\EFDReinf\Common\FactoryInterface')) {
                 throw ProcessException::wrongArgument(2002, '');
             }
@@ -540,25 +541,24 @@ class Tools extends ToolsBase
 
             $xml .= '<evento id="' . $evento->getId() . '">';
 
-                $xml .= $evento->toXML();
+            $xml .= $evento->toXML();
 
             $xml .= '</evento>';
-
         }
 
-         $request = '<Reinf xmlns="http://www.reinf.esocial.gov.br/schemas/envioLoteEventos/v' . $this->serviceVersion . '">'
+        $request = '<Reinf xmlns="http://www.reinf.esocial.gov.br/schemas/envioLoteEventos/v' . $this->serviceVersion . '">'
             . '<loteEventos>'
             . $xml
             . '</loteEventos>'
             . '</Reinf>';
 
-         //validate requisition with XSD
-         $xsd = $this->path
-         . "schemes/comunicacao/v$this->serviceVersion/"
-         . $this->serviceXsd['EnvioLoteEventos']['name'];
+        //validate requisition with XSD
+        $xsd = $this->path
+            . "schemes/comunicacao/v$this->serviceVersion/"
+            . $this->serviceXsd['EnvioLoteEventos']['name'];
 
         Validator::isValid($request, $xsd);
-        
+
         $body = '<sped:ReceberLoteEventos>'
             . '<sped:loteEventos>'
             .       $request
@@ -570,8 +570,8 @@ class Tools extends ToolsBase
 
         return $this->lastResponse;
     }
-    
-     /**
+
+    /**
      * Send batch of events
      * @param integer $grupo
      * @param array $eventos
@@ -598,7 +598,7 @@ class Tools extends ToolsBase
             if (!in_array($evt->alias(), $this->grupos[$grupo])) {
                 throw new \RuntimeException(
                     'O evento ' . $evt->alias() . ' não pertence a este grupo [ '
-                    . $this->eventGroup[$grupo] . ' ].'
+                        . $this->eventGroup[$grupo] . ' ].'
                 );
             }
             $this->checkCertificate($evt);
@@ -653,7 +653,7 @@ class Tools extends ToolsBase
             if (!in_array($evt->alias(), $this->grupos[$grupo])) {
                 throw new \RuntimeException(
                     'O evento ' . $evt->alias() . ' não pertence a este grupo [ '
-                    . $this->eventGroup[$grupo] . ' ].'
+                        . $this->eventGroup[$grupo] . ' ].'
                 );
             }
             $this->checkCertificate($evt);
@@ -661,6 +661,7 @@ class Tools extends ToolsBase
             $xml .= $evt->toXML();
             $xml .= "</evento>";
         }
+
         $content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             . "<Reinf xmlns=\"http://www.reinf.esocial.gov.br/schemas/envioLoteEventosAssincrono/v"
             . $this->serviceVersion . "\">"
@@ -678,7 +679,7 @@ class Tools extends ToolsBase
         $xsd = $this->path
             . "schemes/comunicacao/v$this->serviceVersion/"
             . $this->serviceXsd['EnvioLoteEventos']['name'];
-        
+
         Validator::isValid($content, $xsd);
         $url = $this->urlloteassincrono[$this->tpAmb];
         $this->lastResponse = $this->sendApi('POST', $url, $content);
@@ -1165,6 +1166,6 @@ class Tools extends ToolsBase
         foreach ($required as $key => $regex) {
             $compl .= $std->$key . '/';
         }
-        return substr($compl, 0, strlen($compl)-1);
+        return substr($compl, 0, strlen($compl) - 1);
     }
 }

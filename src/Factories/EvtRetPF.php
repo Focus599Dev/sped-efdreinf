@@ -332,8 +332,8 @@ class EvtRetPF extends Factory implements FactoryInterface
                             self::format($isento->vlrisento),
                             true
                         );
-                        
-                        if ($isento->tpisencao == '99'){
+
+                        if ($isento->tpisencao == '99') {
                             //regra reinf so cria descrição se tpisencao EQ 99
                             $this->dom->addChild(
                                 $rendIsento,
@@ -342,7 +342,7 @@ class EvtRetPF extends Factory implements FactoryInterface
                                 false
                             );
                         }
-                        
+
                         $this->dom->addChild(
                             $rendIsento,
                             "dtLaudo",
@@ -441,7 +441,7 @@ class EvtRetPF extends Factory implements FactoryInterface
                 }
 
                 if (!empty($info->inforra)) {
-                    
+
                     $rra = $info->inforra;
                     $infoRRA = $this->dom->createElement('infoRRA');
                     $this->dom->addChild(
@@ -495,7 +495,7 @@ class EvtRetPF extends Factory implements FactoryInterface
                             self::format($dpj->vlrdespadvogados),
                             true
                         );
-                        
+
                         if (!empty($dpj->ideadv)) {
 
                             foreach ($dpj->ideadv as $adv) {

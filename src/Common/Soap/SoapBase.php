@@ -5,7 +5,6 @@ use NFePHP\Common\Certificate;
 use NFePHP\Common\Exception\RuntimeException;
 use NFePHP\Common\Strings;
 use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Local;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -283,17 +282,41 @@ abstract class SoapBase
      */
     protected function setLocalFolder($folder = '')
     {
-
-        $this->adapter = new Local($folder, LOCK_EX, Local::DISALLOW_LINKS,  [
-            'file' => [
-                'public' => 0777,
-                'private' => 0777,
-            ],
-            'dir' => [
-                'public' => 0777,
-                'private' => 0777,
-            ]
-        ]);
+        if (class_exists('League\Flysystem\Local\LocalFilesystemAdapter')) {
+            // Flysystem v3 (Laravel 13)
+            $this->adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
+                $folder,
+                \League\Flysystem\UnixVisibility\PortableVisibilityConverter::fromArray([
+                    'file' => [
+                        'public' => 0777,
+                        'private' => 0777,
+                    ],
+                    'dir' => [
+                        'public' => 0777,
+                        'private' => 0777,
+                    ]
+                ]),
+                LOCK_EX,
+                \League\Flysystem\Local\LocalFilesystemAdapter::DISALLOW_LINKS
+            );
+        } else {
+            // Flysystem v1 (Laravel 5.5)
+            $this->adapter = new \League\Flysystem\Adapter\Local(
+                $folder,
+                LOCK_EX,
+                \League\Flysystem\Adapter\Local::DISALLOW_LINKS,
+                [
+                    'file' => [
+                        'public' => 0777,
+                        'private' => 0777,
+                    ],
+                    'dir' => [
+                        'public' => 0777,
+                        'private' => 0777,
+                    ]
+                ]
+            );
+        }
 
         $this->filesystem = new Filesystem($this->adapter);
     }

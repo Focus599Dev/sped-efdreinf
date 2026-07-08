@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace NFePHP\EFDReinf\Factories;
 
@@ -10,21 +10,22 @@ use NFePHP\EFDReinf\Common\FactoryInterface;
 use DOMDocument;
 use DOMElement;
 
-class EvtGeneric implements FactoryInterface{
+class EvtGeneric implements FactoryInterface
+{
 
-	private $xml;
+    private $xml;
 
-	private $certificate;
+    private $certificate;
 
-	private $evtTag;
+    private $evtTag;
 
-	private $schema;
+    private $schema;
 
-	private $id;
+    private $id;
 
-	private $aliasSchema = array(
+    private $aliasSchema = array(
 
-		'evtInfoContri' => 'evtInfoContribuinte',
+        'evtInfoContri' => 'evtInfoContribuinte',
         'evtTabProcesso' => 'evtTabProcesso',
         'evtServTom' => 'evtTomadorServicos',
         'evtServPrest' => 'evtPrestadorServicos',
@@ -36,59 +37,93 @@ class EvtGeneric implements FactoryInterface{
         'evtReabreEvPer' => 'evtReabreEvPer',
         'evtFechaEvPer' => 'evtFechamento',
         'evtEspDesportivo' => 'evtEspDesportivo',
-        // 'evtTotal' => 'evtTotal',
-        'evtExclusao' => 'evtExclusao'
+        'evtRetPF'        => 'evt4010PagtoBeneficiarioPF',
+        'evtRetPJ'        => '',
+        'evtBenefNId'     => '',
+        'evtReab'         => '',
+        'evtFech'         => '',
+        'evtExclusao'     => '',
+        'evtTotal'        => '',
+        'evtRet'          => '',
+        'evtTotalContrib' => '',
+        'evtRetCons'      => ''
+    );
 
-	);
+    private $alias = array(
+        'evtInfoContri' => 'R-1000',
+        'evtTabProcesso' => 'R-1010',
+        'evtServTom' => 'R-2010',
+        'evtServPrest' => 'R-2020',
+        'evtAssocDespRec' => 'R-2030',
+        'evtAssocDespRep' => 'R-2040',
+        'evtComProd' => 'R-2050',
+        'evtCPRB' => 'R-2055',
+        'evtPgtosDivs' => 'R-2060',
+        'evtReabreEvPer' => 'R-2070',
+        'evtFechaEvPer' => 'R-2098',
+        'evtEspDesportivo' => 'R-2099',
+        'evtRetPF'        => 'R-4010',
+        'evtRetPJ'        => 'R-4020',
+        'evtBenefNId'     => 'R-4040',
+        'evtReab'         => 'R-9001',
+        'evtFech'         => 'R-9002',
+        'evtExclusao'     => 'R-9003',
+        'evtTotal'        => 'R-9004',
+        'evtRet'          => 'R-9005',
+        'evtTotalContrib' => 'R-9006',
+        'evtRetCons'      => 'R-9007'
+    );
 
-	public function __construct(
-		$xml,
-		Certificate $certificate = null,
-		$evtTag,
-		$layoutVersion,
-		$eventVersion,
-		$id
-	){
 
-		$this->xml = $xml;
+    public function __construct(
+        $xml,
+        Certificate $certificate = null,
+        $evtTag,
+        $layoutVersion,
+        $eventVersion,
+        $id
+    ) {
 
-		$this->certificate = $certificate;
+        $this->xml = $xml;
 
-		$this->evtTag = $evtTag;
+        $this->certificate = $certificate;
 
-		$this->id = $id;
+        $this->evtTag = $evtTag;
 
-		$layoutStr = $this->strLayoutVer($eventVersion);
+        $this->id = $id;
 
-		$evtName = $this->aliasSchema[$evtTag];
+        $layoutStr = $this->strLayoutVer($eventVersion);
 
-		$this->schema = realpath(
+        $evtName = $this->aliasSchema[$evtTag];
+
+        $this->schema = realpath(
             __DIR__
-            . "/../../schemes/$layoutStr/"
-            . $evtName
-            . "-" . $layoutStr
-            . ".xsd"
+                . "/../../schemes/$layoutStr/"
+                . $evtName
+                . "-" . $layoutStr
+                . ".xsd"
         );
+    }
 
-	}
+    public function getXML()
+    {
+        return $xml;
+    }
 
-	public function getXML(){
-		return $xml;
-	}
+    public function toXML()
+    {
 
-	public function toXML(){
-
-		$this->sign($this->evtTag);
+        $this->sign($this->evtTag);
 
         $aux = $this->clearXml($this->xml);
 
         return $aux;
+    }
 
-	}
-
-	protected function sign($tagsigned = ''){
+    protected function sign($tagsigned = '')
+    {
         $xml = $this->xml;
-        
+
         $xml = Strings::clearXmlString($xml);
 
         if (!empty($this->certificate)) {
@@ -110,11 +145,12 @@ class EvtGeneric implements FactoryInterface{
         $this->xml = $xml;
     }
 
-    protected function clearXml($xml){
+    protected function clearXml($xml)
+    {
         $dom = new DOMDocument('1.0', 'UTF-8');
-        
+
         $this->formatOutput = false;
-        
+
         $this->preserveWhiteSpace = false;
 
         $dom->loadXML($xml);
@@ -122,7 +158,8 @@ class EvtGeneric implements FactoryInterface{
         return $dom->saveXML($dom->documentElement);
     }
 
-    protected function strLayoutVer($layout){
+    protected function strLayoutVer($layout)
+    {
         $fils = explode('.', $layout);
         $str = 'v';
         foreach ($fils as $fil) {
@@ -131,34 +168,29 @@ class EvtGeneric implements FactoryInterface{
         return substr($str, 0, -1);
     }
 
-    public function alias(){
-
-    }
-    
-    public function toJson(){
-
-    }
-    
-    public function toStd(){
-
-    }
-    
-    public function toArray(){
-
-    }
-    
-    public function getId(){
-    	return $this->id;
-    }
-    
-    public function getCertificate(){
-    	return $this->certificate;
-    }
-    
-    public function setCertificate(Certificate $certificate){
-    	$this->certificate = $certificate;
+    public function alias()
+    {
+        return $this->alias[$this->evtTag];
     }
 
+    public function toJson() {}
+
+    public function toStd() {}
+
+    public function toArray() {}
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getCertificate()
+    {
+        return $this->certificate;
+    }
+
+    public function setCertificate(Certificate $certificate)
+    {
+        $this->certificate = $certificate;
+    }
 }
-
-?>
