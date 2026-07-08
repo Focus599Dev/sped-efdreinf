@@ -332,12 +332,17 @@ class EvtRetPF extends Factory implements FactoryInterface
                             self::format($isento->vlrisento),
                             true
                         );
-                        $this->dom->addChild(
-                            $rendIsento,
-                            "descRendimento",
-                            $isento->descrendimento ?? null,
-                            false
-                        );
+                        
+                        if ($isento->tpisencao == '99'){
+                            //regra reinf so cria descrição se tpisencao EQ 99
+                            $this->dom->addChild(
+                                $rendIsento,
+                                "descRendimento",
+                                $isento->descrendimento ?? null,
+                                false
+                            );
+                        }
+                        
                         $this->dom->addChild(
                             $rendIsento,
                             "dtLaudo",
