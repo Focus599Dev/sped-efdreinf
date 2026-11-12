@@ -66,7 +66,7 @@ class EvtGeneric implements FactoryInterface
         'evtRetPJ'        => 'R-4020',
         'evtBenefNId'     => 'R-4040',
         'evtReab'         => 'R-9001',
-        'evtFech'         => 'R-9002',
+        'evtFech'         => 'R-4099',
         'evtExclusao'     => 'R-9003',
         'evtTotal'        => 'R-9004',
         'evtRet'          => 'R-9005',
